@@ -1,0 +1,36 @@
+{
+  "name": "telegram-bot",
+  "version": "0.0.0",
+  "description": "With this bot you won't skip the moment when your favorite movies are available on the torrents!",
+  "author": "Dmitrii Baranov",
+  "scripts": {
+    "start": "npm run serve",
+    "build": "npm run build-ts && npm run tslint",
+    "serve": "NODE_ENV=production node dist/bot.js",
+    "watch-node": "nodemon dist/bot.js",
+    "watch": "concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"cyan.bold,green.bold\"  \"npm run watch-ts\" \"npm run watch-node\"",
+    "build-ts": "tsc",
+    "watch-ts": "tsc -w",
+    "tslint": "tslint -c tslint.json -p tsconfig.json",
+    "debug": "npm run build && npm run watch-debug",
+    "serve-debug": "nodemon --inspect dist/bot.js",
+    "watch-debug": "concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"cyan.bold,green.bold\" \"npm run watch-ts\" \"npm run serve-debug\""
+  },
+  "dependencies": {
+    "dotenv": "^6.1.0",
+    "firebase-admin": "^6.1.0",
+    "imdb-api": "^4.0.2",
+    "lodash": "^4.17.5",
+    "telegraf": "^3.25.0",
+    "winston": "^3.1.0"
+  },
+  "devDependencies": {
+    "@types/dotenv": "^6.1.0",
+    "@types/node": "^10.12.7",
+    "concurrently": "^4.0.1",
+    "nodemon": "^1.18.6",
+    "ts-node": "^7.0.1",
+    "tslint": "^5.11.0",
+    "typescript": "^3.1.6"
+  }
+}
