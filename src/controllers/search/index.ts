@@ -1,4 +1,3 @@
-import { Markup, Extra } from 'telegraf';
 import Stage from 'telegraf/stage';
 import Scene from 'telegraf/scenes/base';
 import logger from '../../util/logger';

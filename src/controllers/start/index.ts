@@ -1,5 +1,5 @@
 import { Extra, ContextMessageUpdate, Markup } from 'telegraf';
-import db from '../../firebase';
+import db from '../../util/firebase';
 
 const start = async (ctx: ContextMessageUpdate) => {
   const uid = String(ctx.from.id);
