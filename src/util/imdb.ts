@@ -1,6 +1,5 @@
 import * as imdb from 'imdb-api';
 import { SearchRequest } from 'imdb-api';
-import logger from '../util/logger';
 
 const SEARCH_PARAMS = {
   apiKey: process.env.IMDB_API_KEY,
@@ -8,7 +7,7 @@ const SEARCH_PARAMS = {
 };
 
 /**
- * Returns list of movies
+ * Returns list of movies from the imdb API
  * @param opts - search parameters
  */
 export function search(opts: SearchRequest) {

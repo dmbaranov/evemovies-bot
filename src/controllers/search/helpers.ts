@@ -1,7 +1,10 @@
 import { Markup, Extra } from 'telegraf';
 import { SearchResult, SearchResults } from 'imdb-api';
+import Movie from '../../models/Movie';
+import User from '../../models/User';
 import { search } from '../../util/imdb';
 import logger from '../../util/logger';
+import { saveToSession, deleteFromSession } from '../../util/session';
 
 /**
  * Returning list of movies. Taken either from imdb API or from the session
@@ -14,7 +17,7 @@ export async function getMovieList(ctx: any): Promise<SearchResults> {
 
   try {
     movies = await search({ name: ctx.message.text });
-    saveMoviesToSession(ctx, movies);
+    saveToSession(ctx, 'movies', movies);
 
     return movies;
   } catch (e) {
@@ -58,20 +61,40 @@ export function getMovieControlMenu(movie: SearchResult) {
 }
 
 /**
- * Saving list of movies to the session to prevent redundant API calls to imdb
+ * Pushing imdbid to the user's observalbe array and clearing movies in session
  * @param ctx - telegram context
- * @param movies - list of movies
+ * @param movie - single movie
  */
-export function saveMoviesToSession(ctx: any, movies: SearchResults) {
-  logger.debug(ctx, 'Saving movies to the session');
-  ctx.session.movies = movies;
-}
+export async function addMovieForUser(ctx: any, movie: SearchResult) {
+  logger.debug(ctx, 'Adding movie %s to observables', movie.name);
 
-/**
- * Removing movies from the session
- * @param ctx - telegram context
- */
-export function clearSessionMovies(ctx: any) {
-  logger.debug(ctx, 'Clearing session movies');
-  delete ctx.session.movies;
+  let movieImdb;
+  const existingMovie = await Movie.findById(movie.imdbid);
+
+  if (existingMovie) {
+    movieImdb = existingMovie._id;
+  } else {
+    const newMovie = new Movie({
+      _id: movie.imdbid,
+      title: movie.title,
+      year: movie.year
+    });
+
+    await newMovie.save();
+    movieImdb = movie.imdbid;
+  }
+
+  await User.findOneAndUpdate(
+    {
+      _id: ctx.from.id
+    },
+    {
+      $addToSet: { observableMovies: movieImdb }
+    },
+    {
+      new: true
+    }
+  );
+
+  deleteFromSession(ctx, 'movies');
 }

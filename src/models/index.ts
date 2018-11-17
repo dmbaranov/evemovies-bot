@@ -1,0 +1,2 @@
+require('./User');
+require('./Movie');

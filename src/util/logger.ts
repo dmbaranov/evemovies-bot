@@ -1,5 +1,5 @@
 import util from 'util';
-import winston, { format, LogMethod, LeveledLogMethod } from 'winston';
+import winston, { format } from 'winston';
 
 /**
  * Adds user id and nickname if found. Also formats message to display compelx objects

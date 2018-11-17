@@ -1,12 +1,16 @@
 import Stage from 'telegraf/stage';
 import Scene from 'telegraf/scenes/base';
 import logger from '../../util/logger';
-import { clearSessionMovies, getMovieControlMenu, getMoviesMenu, getMovieList } from './helpers';
+import { deleteFromSession } from '../../util/session';
+import { getMovieControlMenu, getMoviesMenu, getMovieList, addMovieForUser } from './helpers';
 
 const { leave } = Stage;
 const searcher = new Scene('search');
 searcher.enter((ctx: any) => ctx.reply('Entered movie search stage...'));
-searcher.leave((ctx: any) => ctx.reply('Leaving movie search stage...'));
+searcher.leave((ctx: any) => {
+  deleteFromSession(ctx, 'movies');
+  ctx.reply('Leaving movie search stage...');
+});
 searcher.command('cancel', leave());
 
 searcher.on('text', async (ctx: any, next: any) => {
@@ -35,13 +39,14 @@ searcher.on('callback_query', async (ctx: any) => {
   switch (action.a) {
     case 'movie':
       movie = movies.results.find(item => item.imdbid === action.p);
-      ctx.editMessageText(`You've chosen movie: ${movie.name}`, getMovieControlMenu(movie));
+      ctx.editMessageText(`You've chosen movie: ${movie.title}`, getMovieControlMenu(movie));
       break;
 
     case 'add':
       movie = movies.results.find(item => item.imdbid === action.p);
-      ctx.reply(`Adding ${movie.name} to your lib!`);
-      clearSessionMovies(ctx);
+      await addMovieForUser(ctx, movie);
+      ctx.editMessageText(`Added ${movie.name} to your lib! Continue search or /cancel to leave`);
+      leave();
       break;
 
     case 'back':
@@ -53,7 +58,7 @@ searcher.on('callback_query', async (ctx: any) => {
 
     default:
       logger.error(ctx, `Something has caused to the default case call: action: %o`, action);
-      clearSessionMovies(movies);
+      deleteFromSession(ctx, 'movies');
       ctx.reply('An error has occured.. Please, try again');
   }
 });
