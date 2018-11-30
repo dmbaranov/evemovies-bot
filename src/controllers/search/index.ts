@@ -2,14 +2,26 @@ import Stage from 'telegraf/stage';
 import Scene from 'telegraf/scenes/base';
 import logger from '../../util/logger';
 import { deleteFromSession } from '../../util/session';
-import { getMovieControlMenu, getMoviesMenu, getMovieList, addMovieForUser } from './helpers';
+import {
+  getMovieControlMenu,
+  getMoviesMenu,
+  getMovieList,
+  addMovieForUser,
+  canAddMovie
+} from './helpers';
 
 const { leave } = Stage;
 const searcher = new Scene('search');
-searcher.enter((ctx: any) => ctx.reply('Entered movie search stage...'));
+searcher.enter((ctx: any) =>
+  ctx.reply(
+    'Here you can search for movies! Just type the title in and hit enter. Or /cancel to return'
+  )
+);
 searcher.leave((ctx: any) => {
   deleteFromSession(ctx, 'movies');
-  ctx.reply('Leaving movie search stage...');
+  ctx.reply(
+    'Hey, what are you up to? Try /search to find new movies or /movies to check your own list!'
+  );
 });
 searcher.command('cancel', leave());
 
@@ -44,9 +56,16 @@ searcher.on('callback_query', async (ctx: any) => {
 
     case 'add':
       movie = movies.results.find(item => item.imdbid === action.p);
-      await addMovieForUser(ctx, movie);
-      ctx.editMessageText(`Added ${movie.name} to your lib! Continue search or /cancel to leave`);
-      leave();
+      const canAddResult = await canAddMovie(ctx, movie);
+
+      if (typeof canAddResult === 'string') {
+        ctx.editMessageText(`${canAddResult} Continue search or /cancel to leave`);
+      } else {
+        await addMovieForUser(ctx, movie);
+        ctx.editMessageText(`Added ${movie.name} to your lib! Continue search or /cancel to leave`);
+      }
+
+      deleteFromSession(ctx, 'movies');
       break;
 
     case 'back':

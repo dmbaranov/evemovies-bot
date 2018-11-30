@@ -15,12 +15,14 @@ movies.enter(async (ctx: ContextMessageUpdate) => {
   const movies = user.observableMovies;
   saveToSession(ctx, 'movies', movies);
 
-  ctx.reply('Here goes your movies', getMoviesMenu(movies));
+  ctx.reply('This is list of your movies. Edit it or /cancel to return', getMoviesMenu(movies));
 });
 
 movies.leave((ctx: ContextMessageUpdate) => {
   deleteFromSession(ctx, 'movies');
-  ctx.reply('Leaving movies stage...');
+  ctx.reply(
+    'Hey, what are you up to? Try /search to find new movies or /movies to check your own list!'
+  );
 });
 
 movies.command('cancel', leave());

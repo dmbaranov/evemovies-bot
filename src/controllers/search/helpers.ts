@@ -5,6 +5,7 @@ import User from '../../models/User';
 import { search } from '../../util/imdb';
 import logger from '../../util/logger';
 import { saveToSession, deleteFromSession } from '../../util/session';
+import { checkMovieRelease, ISquawkrResponse } from '../../util/release-checker';
 
 /**
  * Returning list of movies. Taken either from imdb API or from the session
@@ -77,7 +78,8 @@ export async function addMovieForUser(ctx: any, movie: SearchResult) {
     const newMovie = new Movie({
       _id: movie.imdbid,
       title: movie.title,
-      year: movie.year
+      year: movie.year,
+      released: false
     });
 
     await newMovie.save();
@@ -97,4 +99,22 @@ export async function addMovieForUser(ctx: any, movie: SearchResult) {
   );
 
   deleteFromSession(ctx, 'movies');
+}
+
+/**
+ * Perform several checks, returns either a reason why movie can't be added or true
+ * @param ctx - telegram context
+ * @param movie - single movie
+ */
+export async function canAddMovie(ctx: any, movie: SearchResult) {
+  const movieRelease = await checkMovieRelease(movie.title);
+  const user = await User.findById(ctx.from.id);
+
+  if (movieRelease && movieRelease.rlname) {
+    return `This movie has been already released. Try search for ${movieRelease.rlname}.`;
+  } else if (user.observableMovies.some(m => m._id === movie.imdbid)) {
+    return "You're already observing this movie.";
+  }
+
+  return true;
 }

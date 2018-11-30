@@ -7,8 +7,8 @@ import winston, { format } from 'winston';
  * @param msg  - message
  * @param data - object to log
  */
-function prepareMessage(ctx: any, msg: string, data?: any) {
-  const formattedMessage = data ? util.format(msg, data) : msg;
+function prepareMessage(ctx: any, msg: string, ...data: any[]) {
+  const formattedMessage = data.length ? util.format(msg, ...data) : msg;
 
   if (ctx && ctx.from) {
     return `[${ctx.from.id}/${ctx.from.username}]: ${formattedMessage}`;
@@ -37,8 +37,8 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 const loggerWithCtx = {
-  debug: (ctx: any, msg: string, data?: any) => logger.debug(prepareMessage(ctx, msg, data)),
-  error: (ctx: any, msg: string, data?: any) => logger.error(prepareMessage(ctx, msg, data))
+  debug: (ctx: any, msg: string, ...data: any[]) => logger.debug(prepareMessage(ctx, msg, ...data)),
+  error: (ctx: any, msg: string, ...data: any[]) => logger.error(prepareMessage(ctx, msg, ...data))
 };
 
 export default loggerWithCtx;

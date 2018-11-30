@@ -1,6 +1,6 @@
 require('dotenv').config();
 require('./models');
-import Telegraf from 'telegraf';
+import Telegraf, { Telegram } from 'telegraf';
 import Stage from 'telegraf/stage';
 import session from 'telegraf/session';
 import mongoose from 'mongoose';
@@ -9,6 +9,7 @@ import logger from './util/logger';
 import start from './controllers/start';
 import searchScene from './controllers/search';
 import moviesScene from './controllers/movies';
+import { checkUnreleasedMovies } from './util/notifier';
 
 mongoose.connect(
   `mongodb://localhost:27017/torrent-bot`,
@@ -36,4 +37,6 @@ mongoose.connection.on('open', () => {
   bot.command('search', async (ctx: any) => ctx.scene.enter('search'));
   bot.command('movies', async (ctx: any) => ctx.scene.enter('movies'));
   bot.startPolling();
+
+  setInterval(checkUnreleasedMovies, 86400000);
 });
