@@ -55,8 +55,9 @@ export async function deleteMovieFromObservables(ctx: any, imdbid: string): Prom
     {
       new: true
     }
-  );
+  ).populate('observableMovies');
 
   saveToSession(ctx, 'movies', user.observableMovies);
+
   return user.observableMovies;
 }

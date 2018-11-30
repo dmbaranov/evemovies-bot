@@ -5,7 +5,7 @@ import User from '../../models/User';
 import { search } from '../../util/imdb';
 import logger from '../../util/logger';
 import { saveToSession, deleteFromSession } from '../../util/session';
-import { checkMovieRelease, ISquawkrResponse } from '../../util/release-checker';
+import { checkMovieRelease } from '../../util/release-checker';
 
 /**
  * Returning list of movies. Taken either from imdb API or from the session

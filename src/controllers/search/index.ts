@@ -28,6 +28,7 @@ searcher.command('cancel', leave());
 searcher.on('text', async (ctx: any, next: any) => {
   logger.debug(ctx, 'Performing search for: %s', ctx.message.text);
 
+  deleteFromSession(ctx, 'movies');
   const movies = await getMovieList(ctx);
 
   if (!movies) {
