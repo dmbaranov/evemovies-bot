@@ -1,5 +1,6 @@
-import { Extra, ContextMessageUpdate, Markup } from 'telegraf';
-import User, { IUser } from '../../models/User';
+import { ContextMessageUpdate } from 'telegraf';
+import logger from '../../util/logger';
+import User from '../../models/User';
 
 const start = async (ctx: ContextMessageUpdate) => {
   const uid = String(ctx.from.id);
@@ -11,6 +12,7 @@ const start = async (ctx: ContextMessageUpdate) => {
       'Glad to see you back! Now you can continue watching after the releases of your favorite movies! What do you want to do now?'
     );
   } else {
+    logger.debug(ctx, 'New user has been created');
     const newUser = new User({
       _id: uid,
       username: ctx.from.username,
