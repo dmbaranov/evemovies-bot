@@ -10,6 +10,7 @@ import start from './controllers/start';
 import searchScene from './controllers/search';
 import moviesScene from './controllers/movies';
 import { checkUnreleasedMovies } from './util/notifier';
+import asyncWrapper from './util/error-handler';
 
 mongoose.connect(
   `mongodb://localhost:27017/torrent-bot`,
@@ -18,7 +19,7 @@ mongoose.connect(
 mongoose.connection.on('error', err => {
   logger.error(
     undefined,
-    `Error occured during an attempt to establish connection with the database: %o`,
+    `Error occured during an attempt to establish connection with the database: %O`,
     err
   );
   process.exit(1);
@@ -34,8 +35,8 @@ mongoose.connection.on('open', () => {
   bot.use(stage.middleware());
 
   bot.start(start);
-  bot.command('search', async (ctx: any) => ctx.scene.enter('search'));
-  bot.command('movies', async (ctx: any) => ctx.scene.enter('movies'));
+  bot.command('search', asyncWrapper((ctx: any) => ctx.scene.enter('search')));
+  bot.command('movies', asyncWrapper((ctx: any) => ctx.scene.enter('movies')));
   bot.startPolling();
 
   setInterval(checkUnreleasedMovies, 86400000);

@@ -20,6 +20,7 @@ movies.enter(async (ctx: ContextMessageUpdate) => {
 
 movies.leave((ctx: ContextMessageUpdate) => {
   deleteFromSession(ctx, 'movies');
+
   ctx.reply(
     'Hey, what are you up to? Try /search to find new movies or /movies to check your own list!'
   );
@@ -46,7 +47,7 @@ movies.on('callback_query', async (ctx: any) => {
       ctx.editMessageText('Here goes your movies', getMoviesMenu(updatedMovieList));
       break;
     default:
-      logger.error(ctx, `Something has caused to the default case call: action: %o`, action);
+      logger.error(ctx, `Something has caused to the default case call: action: %O`, action);
       deleteFromSession(ctx, 'movies');
       ctx.reply('An error has occured.. Please, try again');
   }

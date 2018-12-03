@@ -44,7 +44,7 @@ searcher.on('text', async (ctx: ContextMessageUpdate, next: any) => {
 });
 
 searcher.on('callback_query', async (ctx: ContextMessageUpdate) => {
-  logger.debug(ctx, 'Chosen movie imdbid: %o', ctx.callbackQuery.data);
+  logger.debug(ctx, 'Chosen movie imdbid: %O', ctx.callbackQuery.data);
 
   const action = JSON.parse(ctx.callbackQuery.data);
   const movies = await getMovieList(ctx);
@@ -78,7 +78,7 @@ searcher.on('callback_query', async (ctx: ContextMessageUpdate) => {
       break;
 
     default:
-      logger.error(ctx, `Something has caused to the default case call: action: %o`, action);
+      logger.error(ctx, `Something has caused to the default case call: action: %O`, action);
       deleteFromSession(ctx, 'movies');
       ctx.reply('An error has occured.. Please, try again');
   }

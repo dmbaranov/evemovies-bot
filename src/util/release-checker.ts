@@ -24,10 +24,23 @@ export interface IYtsResponse {
  */
 
 export async function checkMovieRelease(title: string, year: string): Promise<IYtsResponse> {
-  logger.debug(null, 'Checking release for movie %s', title);
+  logger.debug(undefined, 'Checking release for movie %s', title);
   const url = encodeURI(`https://yts.am/ajax/search?query=${title}`);
 
-  const response = await rp.get(url);
+  let response;
+
+  try {
+    response = await rp.get(url);
+  } catch (e) {
+    logger.error(
+      undefined,
+      'Error occured during checking release for movie %s (%s). %O',
+      title,
+      year,
+      e
+    );
+  }
+
   const movies: IYtsResponse[] = JSON.parse(response).data;
 
   if (!movies) return undefined;

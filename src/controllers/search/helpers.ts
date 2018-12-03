@@ -17,12 +17,13 @@ export async function getMovieList(ctx: any): Promise<SearchResults> {
   let movies: SearchResults;
 
   try {
+    logger.debug(ctx, 'Searching for movie %s', ctx.message.text);
     movies = await search({ name: ctx.message.text });
     saveToSession(ctx, 'movies', movies);
 
     return movies;
   } catch (e) {
-    logger.error(ctx, 'Search failed with the error: %o', e);
+    logger.error(ctx, 'Search failed with the error: %O', e);
   }
 }
 

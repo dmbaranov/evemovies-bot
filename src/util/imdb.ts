@@ -1,5 +1,6 @@
 import * as imdb from 'imdb-api';
 import { SearchRequest } from 'imdb-api';
+import logger from './logger';
 
 const SEARCH_PARAMS = {
   apiKey: process.env.IMDB_API_KEY,
@@ -11,5 +12,12 @@ const SEARCH_PARAMS = {
  * @param opts - search parameters
  */
 export function search(opts: SearchRequest) {
-  return imdb.search(opts, SEARCH_PARAMS);
+  let result;
+
+  try {
+    result = imdb.search(opts, SEARCH_PARAMS);
+    return result;
+  } catch (e) {
+    logger.error(null, 'Error occured during searching for movie %O. %O', opts, e);
+  }
 }
