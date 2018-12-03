@@ -1,3 +1,4 @@
+import { ContextMessageUpdate } from 'telegraf';
 import Stage from 'telegraf/stage';
 import Scene from 'telegraf/scenes/base';
 import logger from '../../util/logger';
@@ -12,12 +13,12 @@ import {
 
 const { leave } = Stage;
 const searcher = new Scene('search');
-searcher.enter((ctx: any) =>
+searcher.enter((ctx: ContextMessageUpdate) =>
   ctx.reply(
     'Here you can search for movies! Just type the title in and hit enter. Or /cancel to return'
   )
 );
-searcher.leave((ctx: any) => {
+searcher.leave((ctx: ContextMessageUpdate) => {
   deleteFromSession(ctx, 'movies');
   ctx.reply(
     'Hey, what are you up to? Try /search to find new movies or /movies to check your own list!'
@@ -25,7 +26,7 @@ searcher.leave((ctx: any) => {
 });
 searcher.command('cancel', leave());
 
-searcher.on('text', async (ctx: any, next: any) => {
+searcher.on('text', async (ctx: ContextMessageUpdate, next: any) => {
   logger.debug(ctx, 'Performing search for: %s', ctx.message.text);
 
   deleteFromSession(ctx, 'movies');
@@ -42,7 +43,7 @@ searcher.on('text', async (ctx: any, next: any) => {
   );
 });
 
-searcher.on('callback_query', async (ctx: any) => {
+searcher.on('callback_query', async (ctx: ContextMessageUpdate) => {
   logger.debug(ctx, 'Chosen movie imdbid: %o', ctx.callbackQuery.data);
 
   const action = JSON.parse(ctx.callbackQuery.data);

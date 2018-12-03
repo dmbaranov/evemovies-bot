@@ -1,6 +1,6 @@
 require('dotenv').config();
 require('./models');
-import Telegraf, { Telegram } from 'telegraf';
+import Telegraf from 'telegraf';
 import Stage from 'telegraf/stage';
 import session from 'telegraf/session';
 import mongoose from 'mongoose';

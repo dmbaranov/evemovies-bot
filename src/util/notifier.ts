@@ -13,8 +13,8 @@ export async function checkUnreleasedMovies() {
 
   for (let movie of unreleasedMovies) {
     await sleep(0.5);
-    const checkResult = await checkMovieRelease(movie.title);
-    if (checkResult && checkResult.rlname) {
+    const checkResult = await checkMovieRelease(movie.title, String(movie.year));
+    if (checkResult) {
       logger.debug(null, 'Movie has been released, %O', checkResult);
       await notifyAndUpdateUsers(movie);
       await Movie.findOneAndUpdate(
@@ -50,7 +50,7 @@ async function notifyAndUpdateUsers(movie: IMovie) {
         _id: user._id
       },
       {
-        $pull: { observableMovies: movie._id } // TODO: code duplication. check movies/helpers.ts
+        $pull: { observableMovies: movie._id }
       },
       {
         new: true

@@ -12,28 +12,27 @@ export interface ISquawkrResponse {
   parsed_format: string;
 }
 
-const GOOD_FORMATS = ['BluRay', 'HDTV', 'WEB-DL', 'DVD'];
-const GOOD_QUALITIES = ['720p', '1080p', '4K'];
+export interface IYtsResponse {
+  title: string;
+  year: string;
+}
 
 /**
- * Returns true if movie has been released, false otherwise
+ * Returns a movie if it has been released, undefined otherwise
  * @param title - movie title
+ * @param year -movie year
  */
-export async function checkMovieRelease(title: string): Promise<ISquawkrResponse> {
-  logger.debug(null, 'Checking release for movie %s', title);
-  const { SQUAWKR_API_KEY } = process.env;
-  const url = encodeURI(
-    `https://api.squawkr.io/search.php?apikey=${SQUAWKR_API_KEY}&name=${title.replace(/:/g, '')}`
-  );
-  const response: string = await rp.get(url);
-  const movies: ISquawkrResponse[] = JSON.parse(response);
 
-  if (!movies) {
-    return undefined;
-  }
+export async function checkMovieRelease(title: string, year: string): Promise<IYtsResponse> {
+  logger.debug(null, 'Checking release for movie %s', title);
+  const url = encodeURI(`https://yts.am/ajax/search?query=${title}`);
+
+  const response = await rp.get(url);
+  const movies: IYtsResponse[] = JSON.parse(response).data;
+
+  if (!movies) return undefined;
 
   return movies.find(
-    item =>
-      GOOD_FORMATS.includes(item.parsed_format) && GOOD_QUALITIES.includes(item.parsed_quality)
+    movie => movie.title.toLocaleLowerCase() === title.toLocaleLowerCase() && movie.year === year
   );
 }

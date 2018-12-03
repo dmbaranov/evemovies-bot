@@ -1,4 +1,4 @@
-import { Extra, Markup } from 'telegraf';
+import { Extra, Markup, ContextMessageUpdate } from 'telegraf';
 import { IMovie } from '../../models/Movie';
 import User from '../../models/User';
 import logger from '../../util/logger';
@@ -44,7 +44,10 @@ export function getMovieControlMenu(movie: IMovie) {
  * @param ctx - telegram context
  * @param imdbid - movie id
  */
-export async function deleteMovieFromObservables(ctx: any, imdbid: string): Promise<IMovie[]> {
+export async function deleteMovieFromObservables(
+  ctx: ContextMessageUpdate,
+  imdbid: string
+): Promise<IMovie[]> {
   logger.debug(ctx, 'Removing movie %s from collection', imdbid);
 
   const user = await User.findOneAndUpdate(

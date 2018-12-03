@@ -1,4 +1,4 @@
-import { Markup, Extra } from 'telegraf';
+import { Markup, Extra, ContextMessageUpdate } from 'telegraf';
 import { SearchResult, SearchResults } from 'imdb-api';
 import Movie from '../../models/Movie';
 import User from '../../models/User';
@@ -66,7 +66,7 @@ export function getMovieControlMenu(movie: SearchResult) {
  * @param ctx - telegram context
  * @param movie - single movie
  */
-export async function addMovieForUser(ctx: any, movie: SearchResult) {
+export async function addMovieForUser(ctx: ContextMessageUpdate, movie: SearchResult) {
   logger.debug(ctx, 'Adding movie %s to observables', movie.name);
 
   let movieImdb;
@@ -106,12 +106,12 @@ export async function addMovieForUser(ctx: any, movie: SearchResult) {
  * @param ctx - telegram context
  * @param movie - single movie
  */
-export async function canAddMovie(ctx: any, movie: SearchResult) {
-  const movieRelease = await checkMovieRelease(movie.title);
+export async function canAddMovie(ctx: ContextMessageUpdate, movie: SearchResult) {
+  const movieRelease = await checkMovieRelease(movie.title, String(movie.year));
   const user = await User.findById(ctx.from.id);
 
-  if (movieRelease && movieRelease.rlname) {
-    return `This movie has been already released. Try search for ${movieRelease.rlname}.`;
+  if (movieRelease) {
+    return `This movie has been already released.`;
   } else if (user.observableMovies.some(m => m._id === movie.imdbid)) {
     return "You're already observing this movie.";
   }
