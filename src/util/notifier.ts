@@ -11,7 +11,7 @@ import telegram from '../telegram';
 export async function checkUnreleasedMovies() {
   const unreleasedMovies = await Movie.find({ released: false });
 
-  for (let movie of unreleasedMovies) {
+  for (const movie of unreleasedMovies) {
     await sleep(0.5);
     const checkResult = await checkMovieRelease(movie.title, String(movie.year));
 
