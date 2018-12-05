@@ -19,3 +19,4 @@ dist/**/*
 
 # Other
 debug.log
+yarn.lock

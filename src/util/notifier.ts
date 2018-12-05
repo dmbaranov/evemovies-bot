@@ -43,7 +43,7 @@ async function notifyAndUpdateUsers(movie: IMovie) {
     observableMovies: movie._id
   });
 
-  for (let user of usersToNotify) {
+  for (const user of usersToNotify) {
     logger.debug(null, 'Notifiying user %s about movie %s', user.username, movie.title);
 
     await sleep(0.5);

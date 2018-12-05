@@ -18,6 +18,6 @@ export function search(opts: SearchRequest) {
     result = imdb.search(opts, SEARCH_PARAMS);
     return result;
   } catch (e) {
-    logger.error(null, 'Error occured during searching for movie %O. %O', opts, e);
+    logger.error(undefined, 'Error occured during searching for movie %O. %O', opts, e);
   }
 }

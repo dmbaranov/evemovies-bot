@@ -1,9 +1,11 @@
 require('dotenv').config();
 require('./models');
-import Telegraf from 'telegraf';
+import fs from 'fs';
+import Telegraf, { ContextMessageUpdate } from 'telegraf';
 import Stage from 'telegraf/stage';
 import session from 'telegraf/session';
 import mongoose from 'mongoose';
+import rp from 'request-promise';
 
 import logger from './util/logger';
 import start from './controllers/start';
@@ -26,8 +28,6 @@ mongoose.connection.on('error', err => {
 });
 
 mongoose.connection.on('open', () => {
-  logger.debug(undefined, 'Starting a bot');
-
   const bot = new Telegraf(process.env.TELEGRAM_TOKEN);
   const stage = new Stage([searchScene, moviesScene]);
 
@@ -37,7 +37,30 @@ mongoose.connection.on('open', () => {
   bot.start(start);
   bot.command('search', asyncWrapper((ctx: any) => ctx.scene.enter('search')));
   bot.command('movies', asyncWrapper((ctx: any) => ctx.scene.enter('movies')));
-  bot.startPolling();
 
   setInterval(checkUnreleasedMovies, 86400000);
+
+  process.env.NODE_ENV === 'production' ? startProdMode(bot) : startDevMode(bot);
 });
+
+function startDevMode(bot: Telegraf<ContextMessageUpdate>) {
+  logger.debug(undefined, 'Starting a bot in development mode');
+
+  rp(`https://api.telegram.org/bot${process.env.TELEGRAM_TOKEN}/deleteWebhook`).then(() =>
+    bot.startPolling()
+  );
+}
+
+function startProdMode(bot: Telegraf<ContextMessageUpdate>) {
+  logger.debug(undefined, 'Starting a bot in production mode');
+  const tlsOptions = {
+    key: fs.readFileSync('/etc/letsencrypt/live/dmbaranov.io/privkey.pem'),
+    cert: fs.readFileSync('/etc/letsencrypt/live/dmbaranov.io/fullchain.pem')
+  };
+
+  bot.telegram.setWebhook(`https://dmbaranov.io:8443/${process.env.TELEGRAM_TOKEN}`, {
+    source: 'cert.pem'
+  });
+
+  bot.startWebhook(`/${process.env.TELEGRAM_TOKEN}`, tlsOptions, 8443);
+}
