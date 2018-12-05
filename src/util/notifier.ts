@@ -16,7 +16,7 @@ export async function checkUnreleasedMovies() {
     const checkResult = await checkMovieRelease(movie.title, String(movie.year));
 
     if (checkResult) {
-      logger.debug(null, 'Movie has been released, %O', checkResult);
+      logger.debug(undefined, 'Movie has been released, %O', checkResult);
 
       await notifyAndUpdateUsers(movie);
       await Movie.findOneAndUpdate(
@@ -44,7 +44,7 @@ async function notifyAndUpdateUsers(movie: IMovie) {
   });
 
   for (const user of usersToNotify) {
-    logger.debug(null, 'Notifiying user %s about movie %s', user.username, movie.title);
+    logger.debug(undefined, 'Notifiying user %s about movie %s', user.username, movie.title);
 
     await sleep(0.5);
     await telegram.sendMessage(user._id, `Movie ${movie.title} has been released!`);
