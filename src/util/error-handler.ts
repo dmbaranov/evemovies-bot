@@ -5,10 +5,10 @@ import logger from './logger';
  * Wrapper to catch async errors within a stage. Helps to avoid try catch blocks in there
  * @param fn - function to enter a stage
  */
-const asyncWrapper = (fn: any) => {
+const asyncWrapper = (fn: Function) => {
   return async function(ctx: ContextMessageUpdate, next: any) {
     try {
-      await fn(ctx);
+      return await fn(ctx);
     } catch (error) {
       logger.error(ctx, 'General error, %O', error);
       ctx.reply('An error has occured... Please, try again');

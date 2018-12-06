@@ -18,34 +18,22 @@ export interface IYtsResponse {
 }
 
 /**
- * Returns a movie if it has been released, undefined otherwise
- * @param title - movie title
- * @param year -movie year
+ * Returns true of movie has been released, false otherwise
+ * @param imdbid - movie id from imdb
  */
+export async function checkMovieRelease(imdbid: string): Promise<Boolean> {
+  logger.debug(undefined, 'Checking release for movie %s', imdbid);
 
-export async function checkMovieRelease(title: string, year: string): Promise<IYtsResponse> {
-  logger.debug(undefined, 'Checking release for movie %s', title);
-  const url = encodeURI(`https://yts.am/ajax/search?query=${title}`);
-
+  const url = `http://api.apiumando.info/movie?cb=&quality=720p,1080p,3d&page=1&imdb=${imdbid}`;
   let response;
 
   try {
     response = await rp.get(url);
   } catch (e) {
-    logger.error(
-      undefined,
-      'Error occured during checking release for movie %s (%s). %O',
-      title,
-      year,
-      e
-    );
+    return false;
   }
 
-  const movies: IYtsResponse[] = JSON.parse(response).data;
+  const torrents = JSON.parse(response);
 
-  if (!movies) return undefined;
-
-  return movies.find(
-    movie => movie.title.toLocaleLowerCase() === title.toLocaleLowerCase() && movie.year === year
-  );
+  return torrents.items && torrents.items.length > 0;
 }

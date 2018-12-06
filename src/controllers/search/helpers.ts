@@ -108,7 +108,7 @@ export async function addMovieForUser(ctx: ContextMessageUpdate, movie: SearchRe
  * @param movie - single movie
  */
 export async function canAddMovie(ctx: ContextMessageUpdate, movie: SearchResult) {
-  const movieRelease = await checkMovieRelease(movie.title, String(movie.year));
+  const movieRelease = await checkMovieRelease(movie.imdbid);
   const user = await User.findById(ctx.from.id);
 
   if (movieRelease) {

@@ -13,7 +13,7 @@ export async function checkUnreleasedMovies() {
 
   for (const movie of unreleasedMovies) {
     await sleep(0.5);
-    const checkResult = await checkMovieRelease(movie.title, String(movie.year));
+    const checkResult = await checkMovieRelease(movie._id);
 
     if (checkResult) {
       logger.debug(undefined, 'Movie has been released, %O', checkResult);
