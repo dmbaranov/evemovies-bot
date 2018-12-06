@@ -10,21 +10,23 @@ import {
   addMovieForUser,
   canAddMovie
 } from './helpers';
+import { backKeyboard, backKeyboardBack, mainKeyboard } from '../../util/keyboards';
 
 const { leave } = Stage;
 const searcher = new Scene('search');
-searcher.enter((ctx: ContextMessageUpdate) =>
+
+searcher.enter((ctx: ContextMessageUpdate) => {
   ctx.reply(
-    'Here you can search for movies! Just type the title in and hit enter. Or /cancel to return'
-  )
-);
-searcher.leave((ctx: ContextMessageUpdate) => {
-  deleteFromSession(ctx, 'movies');
-  ctx.reply(
-    'Hey, what are you up to? Try /search to find new movies or /movies to check your own list!'
+    'Here you can search for movies! Just type the title in and hit enter. Use /cancel or inline keyboard to return',
+    backKeyboard
   );
 });
+searcher.leave((ctx: ContextMessageUpdate) => {
+  deleteFromSession(ctx, 'movies');
+  ctx.reply('Hey, what are you up to?', mainKeyboard);
+});
 searcher.command('cancel', leave());
+searcher.hears(backKeyboardBack, leave());
 
 searcher.on('text', async (ctx: ContextMessageUpdate, next: any) => {
   logger.debug(ctx, 'Performing search for: %s', ctx.message.text);

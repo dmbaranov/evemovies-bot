@@ -1,6 +1,7 @@
 import { ContextMessageUpdate } from 'telegraf';
 import logger from '../../util/logger';
 import User from '../../models/User';
+import { mainKeyboard } from '../../util/keyboards';
 
 const start = async (ctx: ContextMessageUpdate) => {
   const uid = String(ctx.from.id);
@@ -9,7 +10,8 @@ const start = async (ctx: ContextMessageUpdate) => {
 
   if (user) {
     ctx.reply(
-      'Glad to see you back! Now you can continue watching after the releases of your favorite movies! What do you want to do now?'
+      'Glad to see you back! Now you can continue watching after the releases of your favorite movies! What do you want to do now?',
+      mainKeyboard
     );
   } else {
     logger.debug(ctx, 'New user has been created');
@@ -20,7 +22,10 @@ const start = async (ctx: ContextMessageUpdate) => {
     });
 
     await newUser.save();
-    ctx.reply('Account has been created successfully!');
+    ctx.reply(
+      'Account has been created successfully! Choose what you want to do next',
+      mainKeyboard
+    );
   }
 };
 

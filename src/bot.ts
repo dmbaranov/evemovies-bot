@@ -13,6 +13,7 @@ import searchScene from './controllers/search';
 import moviesScene from './controllers/movies';
 import { checkUnreleasedMovies } from './util/notifier';
 import asyncWrapper from './util/error-handler';
+import { mainKeyboardSearchMovies, mainKeyboardMyCollection } from './util/keyboards';
 
 mongoose.connect(
   `mongodb://localhost:27017/torrent-bot`,
@@ -35,8 +36,8 @@ mongoose.connection.on('open', () => {
   bot.use(stage.middleware());
 
   bot.start(start);
-  bot.command('search', asyncWrapper((ctx: any) => ctx.scene.enter('search')));
-  bot.command('movies', asyncWrapper((ctx: any) => ctx.scene.enter('movies')));
+  bot.hears(mainKeyboardSearchMovies, asyncWrapper((ctx: any) => ctx.scene.enter('search')));
+  bot.hears(mainKeyboardMyCollection, asyncWrapper((ctx: any) => ctx.scene.enter('movies')));
 
   setInterval(checkUnreleasedMovies, 86400000);
 

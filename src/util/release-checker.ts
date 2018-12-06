@@ -1,22 +1,6 @@
 import * as rp from 'request-promise';
 import logger from '../util/logger';
 
-export interface ISquawkrResponse {
-  rlname: string;
-  added_timestamp: string;
-  tmdb_id: string;
-  parsed_title: string;
-  parsed_year: string;
-  parsed_quality: string;
-  parsed_language: string;
-  parsed_format: string;
-}
-
-export interface IYtsResponse {
-  title: string;
-  year: string;
-}
-
 /**
  * Returns true of movie has been released, false otherwise
  * @param imdbid - movie id from imdb

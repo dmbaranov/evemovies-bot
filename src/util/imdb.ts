@@ -11,11 +11,11 @@ const SEARCH_PARAMS = {
  * Returns list of movies from the imdb API
  * @param opts - search parameters
  */
-export function search(opts: SearchRequest) {
+export async function search(opts: SearchRequest) {
   let result;
 
   try {
-    result = imdb.search(opts, SEARCH_PARAMS);
+    result = await imdb.search(opts, SEARCH_PARAMS);
     return result;
   } catch (e) {
     logger.error(undefined, 'Error occured during searching for movie %O. %O', opts, e);
