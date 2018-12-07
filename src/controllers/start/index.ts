@@ -9,7 +9,7 @@ const start = async (ctx: ContextMessageUpdate) => {
   const user = await User.findById(uid);
 
   if (user) {
-    ctx.reply(
+    await ctx.reply(
       'Glad to see you back! Now you can continue watching after the releases of your favorite movies! What do you want to do now?',
       mainKeyboard
     );
@@ -22,7 +22,7 @@ const start = async (ctx: ContextMessageUpdate) => {
     });
 
     await newUser.save();
-    ctx.reply(
+    await ctx.reply(
       'Account has been created successfully! Choose what you want to do next',
       mainKeyboard
     );

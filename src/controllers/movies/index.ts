@@ -16,17 +16,14 @@ movies.enter(async (ctx: ContextMessageUpdate) => {
   const movies = user.observableMovies;
   saveToSession(ctx, 'movies', movies);
 
-  ctx.reply('Movies', getMoviesMenu(movies));
-  ctx.reply(
-    'This is list of your movies. Edit it or use /cancel or inline keyboard to return',
-    backKeyboard
-  );
+  await ctx.reply('This is list of your movies', getMoviesMenu(movies));
+  await ctx.reply("You can delete movies you don't want to track anymore", backKeyboard);
 });
 
-movies.leave((ctx: ContextMessageUpdate) => {
+movies.leave(async (ctx: ContextMessageUpdate) => {
   deleteFromSession(ctx, 'movies');
 
-  ctx.reply('Hey, what are you up to?', mainKeyboard);
+  await ctx.reply('Hey, what are you up to?', mainKeyboard);
 });
 
 movies.command('cancel', leave());
@@ -40,20 +37,20 @@ movies.on('callback_query', async (ctx: any) => {
   switch (action.a) {
     case 'movie':
       movie = movies.find(item => item._id === action.p);
-      ctx.editMessageText(`You've chosen movie: ${movie.title}`, getMovieControlMenu(movie));
+      await ctx.editMessageText(`You've chosen movie: ${movie.title}`, getMovieControlMenu(movie));
       break;
     case 'back':
-      ctx.editMessageText('Movies', getMoviesMenu(movies));
+      await ctx.editMessageText('This is list of your movies', getMoviesMenu(movies));
       break;
     case 'delete':
       movie = movies.find(item => item._id === action.p);
       const updatedMovieList = await deleteMovieFromObservables(ctx, movie._id);
-      ctx.editMessageText('Movies', getMoviesMenu(updatedMovieList));
+      await ctx.editMessageText('This is list of your movies', getMoviesMenu(updatedMovieList));
       break;
     default:
       logger.error(ctx, `Something has caused to the default case call: action: %O`, action);
       deleteFromSession(ctx, 'movies');
-      ctx.reply('An error has occured.. Please, try again');
+      await ctx.reply('An error has occured.. Please, try again');
   }
 });
 

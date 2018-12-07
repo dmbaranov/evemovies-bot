@@ -15,15 +15,15 @@ import { backKeyboard, backKeyboardBack, mainKeyboard } from '../../util/keyboar
 const { leave } = Stage;
 const searcher = new Scene('search');
 
-searcher.enter((ctx: ContextMessageUpdate) => {
-  ctx.reply(
+searcher.enter(async (ctx: ContextMessageUpdate) => {
+  await ctx.reply(
     'Here you can search for movies! Just type the title in and hit enter. Use /cancel or inline keyboard to return',
     backKeyboard
   );
 });
-searcher.leave((ctx: ContextMessageUpdate) => {
+searcher.leave(async (ctx: ContextMessageUpdate) => {
   deleteFromSession(ctx, 'movies');
-  ctx.reply('Hey, what are you up to?', mainKeyboard);
+  await ctx.reply('Hey, what are you up to?', mainKeyboard);
 });
 searcher.command('cancel', leave());
 searcher.hears(backKeyboardBack, leave());
@@ -35,11 +35,13 @@ searcher.on('text', async (ctx: ContextMessageUpdate, next: any) => {
   const movies = await getMovieList(ctx);
 
   if (!movies) {
-    ctx.reply('No movies were found... Try to specify your request or /cancel to stop searching');
+    await ctx.reply(
+      'No movies were found... Try to specify your request or /cancel to stop searching'
+    );
     return next();
   }
 
-  ctx.reply(
+  await ctx.reply(
     "Here's a list of movies that I found for you! Please, choose one or specify your request and try",
     getMoviesMenu(movies)
   );
@@ -54,8 +56,13 @@ searcher.on('callback_query', async (ctx: ContextMessageUpdate) => {
 
   switch (action.a) {
     case 'movie':
+      if (!movies) {
+        logger.error(ctx, 'Attempt to pick a movie from the previous message');
+        return await ctx.reply('Something went wrong. Try one more time..');
+      }
+
       movie = movies.results.find(item => item.imdbid === action.p);
-      ctx.editMessageText(`You've chosen movie: ${movie.title}`, getMovieControlMenu(movie));
+      await ctx.editMessageText(`You've chosen movie: ${movie.title}`, getMovieControlMenu(movie));
       break;
 
     case 'add':
@@ -63,17 +70,19 @@ searcher.on('callback_query', async (ctx: ContextMessageUpdate) => {
       const canAddResult = await canAddMovie(ctx, movie);
 
       if (typeof canAddResult === 'string') {
-        ctx.editMessageText(`${canAddResult} Continue search or /cancel to leave`);
+        await ctx.editMessageText(`${canAddResult} Continue search or /cancel to leave`);
       } else {
         await addMovieForUser(ctx, movie);
-        ctx.editMessageText(`Added ${movie.name} to your lib! Continue search or /cancel to leave`);
+        await ctx.editMessageText(
+          `Added ${movie.name} to your lib! Continue search or /cancel to leave`
+        );
       }
 
       deleteFromSession(ctx, 'movies');
       break;
 
     case 'back':
-      ctx.editMessageText(
+      await ctx.editMessageText(
         "Here's a list of movies that I found for you! Please, choose one or specify your request",
         getMoviesMenu(movies)
       );
@@ -82,7 +91,7 @@ searcher.on('callback_query', async (ctx: ContextMessageUpdate) => {
     default:
       logger.error(ctx, `Something has caused to the default case call: action: %O`, action);
       deleteFromSession(ctx, 'movies');
-      ctx.reply('An error has occured.. Please, try again');
+      await ctx.reply('Something went wrong. Try one more time..');
   }
 });
 
