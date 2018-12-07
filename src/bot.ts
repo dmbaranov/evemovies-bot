@@ -9,8 +9,10 @@ import rp from 'request-promise';
 
 import logger from './util/logger';
 import start from './controllers/start';
+import about from './controllers/about';
 import searchScene from './controllers/search';
 import moviesScene from './controllers/movies';
+import settingsScene from './controllers/settings';
 import { checkUnreleasedMovies } from './util/notifier';
 import asyncWrapper from './util/error-handler';
 import {
@@ -22,6 +24,7 @@ import {
   mainKeyboard
 } from './util/keyboards';
 import { updateUserTimestamp } from './middlewares/update-user-timestamp';
+import { getUserInfo } from './middlewares/user-info';
 
 mongoose.connect(
   `mongodb://localhost:27017/torrent-bot`,
@@ -38,10 +41,11 @@ mongoose.connection.on('error', err => {
 
 mongoose.connection.on('open', () => {
   const bot = new Telegraf(process.env.TELEGRAM_TOKEN);
-  const stage = new Stage([searchScene, moviesScene]);
+  const stage = new Stage([searchScene, moviesScene, settingsScene]);
 
   bot.use(session());
   bot.use(stage.middleware());
+  bot.use(getUserInfo);
 
   bot.start(start);
   bot.hears(
@@ -57,22 +61,9 @@ mongoose.connection.on('open', () => {
   bot.hears(
     mainKeyboardSettings,
     updateUserTimestamp,
-    asyncWrapper(async (ctx: any) => {
-      await ctx.reply('To be implemented...');
-    })
+    asyncWrapper(async (ctx: any) => await ctx.scene.enter('settings'))
   );
-  bot.hears(
-    mainKeyboardAbout,
-    updateUserTimestamp,
-    asyncWrapper(async (ctx: any) => {
-      logger.debug(ctx, 'Opens about section');
-      await ctx.reply(
-        `Hey! First of all, thanks for using this bot! 
-        \nHave you ever had a moments when you see a trailer of cool movie and give yourself a promise to watch it? Then it appears to be 2 or 3 months until the release of this movie and you simply forget about it.. I was in such situation quite a lot of time. That's why this bot exists. 
-        \nIt works quite simply - you can search for a movie you would like to watch later and add it to your collection. After that bot will send you a message once you can watch this movie online. Easy? Of course! Easy and powerful!`
-      );
-    })
-  );
+  bot.hears(mainKeyboardAbout, updateUserTimestamp, asyncWrapper(about));
   bot.hears(
     backKeyboardBack,
     asyncWrapper(async (ctx: any) => {
