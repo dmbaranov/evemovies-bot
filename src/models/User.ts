@@ -6,6 +6,7 @@ export interface IUser extends Document {
   username: string;
   name: string;
   observableMovies: IMovie[];
+  lastActivity: string;
 }
 
 export const UserSchema = new mongoose.Schema(
@@ -18,7 +19,8 @@ export const UserSchema = new mongoose.Schema(
         type: String,
         ref: 'Movie'
       }
-    ]
+    ],
+    lastActivity: String
   },
   { _id: false }
 );

@@ -21,6 +21,7 @@ import {
   mainKeyboardAbout,
   mainKeyboard
 } from './util/keyboards';
+import { updateUserTimestamp } from './middlewares/update-user-timestamp';
 
 mongoose.connect(
   `mongodb://localhost:27017/torrent-bot`,
@@ -45,20 +46,24 @@ mongoose.connection.on('open', () => {
   bot.start(start);
   bot.hears(
     mainKeyboardSearchMovies,
+    updateUserTimestamp,
     asyncWrapper(async (ctx: any) => await ctx.scene.enter('search'))
   );
   bot.hears(
     mainKeyboardMyCollection,
+    updateUserTimestamp,
     asyncWrapper(async (ctx: any) => await ctx.scene.enter('movies'))
   );
   bot.hears(
     mainKeyboardSettings,
+    updateUserTimestamp,
     asyncWrapper(async (ctx: any) => {
       await ctx.reply('To be implemented...');
     })
   );
   bot.hears(
     mainKeyboardAbout,
+    updateUserTimestamp,
     asyncWrapper(async (ctx: any) => {
       logger.debug(ctx, 'Opens about section');
       await ctx.reply(
