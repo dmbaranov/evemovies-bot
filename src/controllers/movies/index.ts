@@ -1,17 +1,18 @@
 import { ContextMessageUpdate } from 'telegraf';
 import Stage from 'telegraf/stage';
 import Scene from 'telegraf/scenes/base';
-import { IMovie } from '../../models/Movie';
 import User from '../../models/User';
-import logger from '../../util/logger';
 import { saveToSession, deleteFromSession } from '../../util/session';
 import { backKeyboard, backKeyboardBack, mainKeyboard } from '../../util/keyboards';
-import { getMoviesMenu, getMovieControlMenu, deleteMovieFromObservables } from './helpers';
+import { getMoviesMenu } from './helpers';
+import { exposeMovie } from './middlewares';
+import { movieAction, backAction, deleteAction } from './actions';
 
 const { leave } = Stage;
 const movies = new Scene('movies');
 
 movies.enter(async (ctx: ContextMessageUpdate) => {
+  // TODO: add update-time-stamp middleware
   const user = await User.findById(ctx.from.id);
   const movies = user.observableMovies;
   saveToSession(ctx, 'movies', movies);
@@ -29,29 +30,8 @@ movies.leave(async (ctx: ContextMessageUpdate) => {
 movies.command('cancel', leave());
 movies.hears(backKeyboardBack, leave());
 
-movies.on('callback_query', async (ctx: any) => {
-  const action = JSON.parse(ctx.callbackQuery.data);
-  const movies: IMovie[] = ctx.session.movies;
-  let movie: IMovie;
-
-  switch (action.a) {
-    case 'movie':
-      movie = movies.find(item => item._id === action.p);
-      await ctx.editMessageText(`You've chosen movie: ${movie.title}`, getMovieControlMenu(movie));
-      break;
-    case 'back':
-      await ctx.editMessageText('This is list of your movies', getMoviesMenu(movies));
-      break;
-    case 'delete':
-      movie = movies.find(item => item._id === action.p);
-      const updatedMovieList = await deleteMovieFromObservables(ctx, movie._id);
-      await ctx.editMessageText('This is list of your movies', getMoviesMenu(updatedMovieList));
-      break;
-    default:
-      logger.error(ctx, `Something has caused to the default case call: action: %O`, action);
-      deleteFromSession(ctx, 'movies');
-      await ctx.reply('An error has occured.. Please, try again');
-  }
-});
+movies.action(/movie/, exposeMovie, movieAction);
+movies.action(/back/, backAction);
+movies.action(/delete/, exposeMovie, deleteAction);
 
 export default movies;

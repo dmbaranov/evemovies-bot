@@ -77,6 +77,10 @@ mongoose.connection.on('open', () => {
     })
   );
 
+  bot.catch((error: any) => {
+    logger.debug(undefined, 'Global error has happened, %O', error);
+  });
+
   setInterval(checkUnreleasedMovies, 86400000);
 
   process.env.NODE_ENV === 'production' ? startProdMode(bot) : startDevMode(bot);

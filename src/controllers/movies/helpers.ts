@@ -1,7 +1,6 @@
 import { Extra, Markup, ContextMessageUpdate } from 'telegraf';
 import { IMovie } from '../../models/Movie';
 import User from '../../models/User';
-import logger from '../../util/logger';
 import { saveToSession } from '../../util/session';
 
 /**
@@ -42,18 +41,12 @@ export function getMovieControlMenu(movie: IMovie) {
 /**
  * Deletes movie from observable array and refreshes movies in session
  * @param ctx - telegram context
- * @param imdbid - movie id
  */
-export async function deleteMovieFromObservables(
-  ctx: ContextMessageUpdate,
-  imdbid: string
-): Promise<IMovie[]> {
-  logger.debug(ctx, 'Removing movie %s from collection', imdbid);
-
+export async function deleteMovieFromObservables(ctx: any): Promise<IMovie[]> {
   const user = await User.findOneAndUpdate(
     { _id: ctx.from.id },
     {
-      $pull: { observableMovies: imdbid }
+      $pull: { observableMovies: ctx.movie._id }
     },
     {
       new: true

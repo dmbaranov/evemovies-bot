@@ -67,10 +67,11 @@ export function getMovieControlMenu(movie: SearchResult) {
  * @param ctx - telegram context
  * @param movie - single movie
  */
-export async function addMovieForUser(ctx: ContextMessageUpdate, movie: SearchResult) {
-  logger.debug(ctx, 'Adding movie %s to observables', movie.name);
+export async function addMovieForUser(ctx: any) {
+  logger.debug(ctx, 'Adding movie %s to observables', ctx.movie.name);
 
   let movieImdb;
+  const movie: SearchResult = ctx.movie;
   const existingMovie = await Movie.findById(movie.imdbid);
 
   if (existingMovie) {
@@ -107,13 +108,13 @@ export async function addMovieForUser(ctx: ContextMessageUpdate, movie: SearchRe
  * @param ctx - telegram context
  * @param movie - single movie
  */
-export async function canAddMovie(ctx: ContextMessageUpdate, movie: SearchResult) {
-  const movieRelease = await checkMovieRelease(movie.imdbid);
+export async function canAddMovie(ctx: any) {
+  const movieRelease = await checkMovieRelease(ctx.movie.imdbid);
   const user = await User.findById(ctx.from.id);
 
   if (movieRelease) {
     return `This movie has been already released.`;
-  } else if (user.observableMovies.some(m => m._id === movie.imdbid)) {
+  } else if (user.observableMovies.some(m => m._id === ctx.movie.imdbid)) {
     return "You're already observing this movie.";
   }
 
