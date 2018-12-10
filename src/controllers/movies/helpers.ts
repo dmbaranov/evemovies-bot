@@ -26,12 +26,20 @@ export function getMoviesMenu(movies: IMovie[]) {
  * Menu to control current movie
  * @param movie - single movie
  */
-export function getMovieControlMenu(movie: IMovie) {
+export function getMovieControlMenu(ctx: ContextMessageUpdate) {
   return Extra.HTML().markup((m: Markup) =>
     m.inlineKeyboard(
       [
-        m.callbackButton(`Back`, JSON.stringify({ a: 'back', p: undefined }), false),
-        m.callbackButton(`Delete`, JSON.stringify({ a: 'delete', p: movie._id }), false)
+        m.callbackButton(
+          ctx.i18n.t('scenes.movies.back_button'),
+          JSON.stringify({ a: 'back', p: undefined }),
+          false
+        ),
+        m.callbackButton(
+          ctx.i18n.t('scenes.movies.delete_button'),
+          JSON.stringify({ a: 'delete', p: ctx.movie._id }),
+          false
+        )
       ],
       {}
     )

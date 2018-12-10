@@ -52,7 +52,7 @@ mongoose.connection.on('open', () => {
   });
 
   bot.context.userInfo = {
-    language: 'en'
+    language: undefined
   };
 
   bot.use(session());

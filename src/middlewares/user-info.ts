@@ -8,10 +8,11 @@ import User from '../models/User';
  * @param next - next function
  */
 export const getUserInfo = async (ctx: ContextMessageUpdate, next: Function) => {
-  if (!ctx.userInfo || !ctx.userInfo.language) {
+  if (!ctx.userInfo.language) {
     const user = await User.findById(ctx.from.id);
 
     ctx.userInfo.language = user.language;
+    ctx.i18n.locale(user.language);
   }
 
   return next();

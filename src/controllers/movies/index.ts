@@ -17,14 +17,14 @@ movies.enter(async (ctx: ContextMessageUpdate) => {
   const movies = user.observableMovies;
   saveToSession(ctx, 'movies', movies);
 
-  await ctx.reply('This is list of your movies', getMoviesMenu(movies));
-  await ctx.reply("You can delete movies you don't want to track anymore", backKeyboard);
+  await ctx.reply(ctx.i18n.t('scenes.movies.list_of_movies'), getMoviesMenu(movies));
+  await ctx.reply(ctx.i18n.t('scenes.movies.delete_unwanted_movies'), backKeyboard);
 });
 
 movies.leave(async (ctx: ContextMessageUpdate) => {
   deleteFromSession(ctx, 'movies');
 
-  await ctx.reply('Hey, what are you up to?', mainKeyboard);
+  await ctx.reply(ctx.i18n.t('shared.what_next'), mainKeyboard);
 });
 
 movies.command('cancel', leave());
