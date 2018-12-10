@@ -13,14 +13,11 @@ const { leave } = Stage;
 const searcher = new Scene('search');
 
 searcher.enter(async (ctx: ContextMessageUpdate) => {
-  await ctx.reply(
-    'Here you can search for movies! Just type the title in and hit enter. Use /cancel or inline keyboard to return',
-    backKeyboard
-  );
+  await ctx.reply(ctx.i18n.t('scenes.search.welcome_to_search'), backKeyboard);
 });
 searcher.leave(async (ctx: ContextMessageUpdate) => {
   deleteFromSession(ctx, 'movies');
-  await ctx.reply('Hey, what are you up to?', mainKeyboard);
+  await ctx.reply(ctx.i18n.t('shared.what_next'), mainKeyboard);
 });
 
 searcher.command('cancel', leave());
@@ -33,16 +30,11 @@ searcher.on('text', async (ctx: ContextMessageUpdate, next: Function) => {
   const movies = await getMovieList(ctx);
 
   if (!movies) {
-    await ctx.reply(
-      'No movies were found... Try to specify your request or /cancel to stop searching'
-    );
+    await ctx.reply(ctx.i18n.t('scenes.search.no_movies_found'));
     return next();
   }
 
-  await ctx.reply(
-    "Here's a list of movies that I found for you! Please, choose one or specify your request and try",
-    getMoviesMenu(movies)
-  );
+  await ctx.reply(ctx.i18n.t('scenes.search.list_of_found_movies'), getMoviesMenu(movies));
 });
 
 searcher.action(/movie/, exposeMovie, movieAction);

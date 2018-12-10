@@ -50,12 +50,20 @@ export function getMoviesMenu(movies: SearchResults) {
  * Menu to control current movie
  * @param movie - single movie
  */
-export function getMovieControlMenu(movie: SearchResult) {
+export function getMovieControlMenu(ctx: ContextMessageUpdate) {
   return Extra.HTML().markup((m: Markup) =>
     m.inlineKeyboard(
       [
-        m.callbackButton(`Back`, JSON.stringify({ a: 'back', p: undefined }), false),
-        m.callbackButton(`Add`, JSON.stringify({ a: 'add', p: movie.imdbid }), false)
+        m.callbackButton(
+          ctx.i18n.t('scenes.search.back_button'),
+          JSON.stringify({ a: 'back', p: undefined }),
+          false
+        ),
+        m.callbackButton(
+          ctx.i18n.t('scenes.search.add_button'),
+          JSON.stringify({ a: 'add', p: ctx.movie.imdbid }),
+          false
+        )
       ],
       {}
     )
@@ -113,9 +121,9 @@ export async function canAddMovie(ctx: ContextMessageUpdate) {
   const user = await User.findById(ctx.from.id);
 
   if (movieRelease) {
-    return `This movie has been already released.`;
+    return ctx.i18n.t('scenes.search.reason_movie_released');
   } else if (user.observableMovies.some(m => m._id === ctx.movie.imdbid)) {
-    return "You're already observing this movie.";
+    return ctx.i18n.t('scenes.search.reason_already_observing');
   }
 
   return true;

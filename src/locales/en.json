@@ -13,9 +13,22 @@
       "back_button": "Back",
       "delete_button": "Delete",
       "delete_unwanted_movies": "You can delete movies you don't want to track anymore"
+    },
+    "search": {
+      "chosen_movie": "You've chosen movie: ${title}",
+      "added_movie_to_lib": "Added ${title} to your lib! Continue search or /cancel to leave",
+      "list_of_found_movies": "Here's a list of movies that I found for you! Please, choose one or specify your request",
+      "continue_search": "${canAddResult} Continue search or /cancel to leave",
+      "back_button": "Back",
+      "add_button": "Add",
+      "reason_movie_released": "This movie has been already released.",
+      "reason_already_observing": "You're already observing this movie.",
+      "welcome_to_search": "Here you can search for movies! Just type the title in and hit enter. Use /cancel or inline keyboard to return",
+      "no_movies_found": "No movies were found... Try to specify your request or /cancel to stop searching"
     }
   },
   "shared": {
-    "what_next": "Hey, what are you up to?"
+    "what_next": "Hey, what are you up to?",
+    "something_went_wrong": "Something went wrong. Try one more time.."
   }
 }
