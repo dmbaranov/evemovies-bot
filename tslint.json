@@ -38,5 +38,8 @@
     "no-null-keyword": true,
     "prefer-const": true,
     "jsdoc-format": true
+  },
+  "linterOptions": {
+    "exclude": ["src/locales/*.json"]
   }
 }
