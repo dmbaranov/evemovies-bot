@@ -15,10 +15,7 @@ export async function updateLanguage(ctx: any, newLang: 'en' | 'ru') {
     { new: true }
   );
 
-  const newUserInfo = {
-    ...ctx.session.userInfo,
-    language: newLang
-  };
+  ctx.userInfo.language = newLang;
 
-  saveToSession(ctx, 'userInfo', newUserInfo);
+  ctx.i18n.locale(newLang);
 }

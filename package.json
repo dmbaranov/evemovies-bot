@@ -25,6 +25,7 @@
     "request": "^2.88.0",
     "request-promise": "^4.2.2",
     "telegraf": "^3.25.0",
+    "telegraf-i18n": "^6.4.0",
     "winston": "^3.1.0"
   },
   "devDependencies": {

@@ -1,6 +1,6 @@
 import logger from './logger';
 
-type SessionDataField = 'movies' | 'userInfo';
+type SessionDataField = 'movies';
 
 /**
  * Saving data to the session

@@ -1,12 +1,13 @@
 require('dotenv').config();
 require('./models');
 import fs from 'fs';
+import path from 'path';
 import Telegraf, { ContextMessageUpdate } from 'telegraf';
+import TelegrafI18n from 'telegraf-i18n';
 import Stage from 'telegraf/stage';
 import session from 'telegraf/session';
 import mongoose from 'mongoose';
 import rp from 'request-promise';
-
 import logger from './util/logger';
 import start from './controllers/start';
 import about from './controllers/about';
@@ -42,8 +43,20 @@ mongoose.connection.on('error', err => {
 mongoose.connection.on('open', () => {
   const bot = new Telegraf(process.env.TELEGRAM_TOKEN);
   const stage = new Stage([searchScene, moviesScene, settingsScene]);
+  const i18n = new TelegrafI18n({
+    defaultLanguage: 'en',
+    directory: path.resolve(__dirname, 'locales'),
+    useSession: true,
+    allowMissing: false,
+    sessionName: 'session'
+  });
+
+  (bot.context as any).userInfo = {
+    language: 'en'
+  };
 
   bot.use(session());
+  bot.use(i18n.middleware());
   bot.use(stage.middleware());
   bot.use(getUserInfo);
 
