@@ -11,7 +11,7 @@ import { checkMovieRelease } from '../../util/release-checker';
  * Returning list of movies. Taken either from imdb API or from the session
  * @param ctx - telegram context
  */
-export async function getMovieList(ctx: any): Promise<SearchResults> {
+export async function getMovieList(ctx: ContextMessageUpdate): Promise<SearchResults> {
   if (ctx.session.movies) return ctx.session.movies;
 
   let movies: SearchResults;
@@ -67,7 +67,7 @@ export function getMovieControlMenu(movie: SearchResult) {
  * @param ctx - telegram context
  * @param movie - single movie
  */
-export async function addMovieForUser(ctx: any) {
+export async function addMovieForUser(ctx: ContextMessageUpdate) {
   logger.debug(ctx, 'Adding movie %s to observables', ctx.movie.name);
 
   let movieImdb;
@@ -108,7 +108,7 @@ export async function addMovieForUser(ctx: any) {
  * @param ctx - telegram context
  * @param movie - single movie
  */
-export async function canAddMovie(ctx: any) {
+export async function canAddMovie(ctx: ContextMessageUpdate) {
   const movieRelease = await checkMovieRelease(ctx.movie.imdbid);
   const user = await User.findById(ctx.from.id);
 

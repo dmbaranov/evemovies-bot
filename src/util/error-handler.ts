@@ -6,7 +6,7 @@ import logger from './logger';
  * @param fn - function to enter a stage
  */
 const asyncWrapper = (fn: Function) => {
-  return async function(ctx: ContextMessageUpdate, next: any) {
+  return async function(ctx: ContextMessageUpdate, next: Function) {
     try {
       return await fn(ctx);
     } catch (error) {

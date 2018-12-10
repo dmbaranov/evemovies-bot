@@ -51,7 +51,7 @@ mongoose.connection.on('open', () => {
     sessionName: 'session'
   });
 
-  (bot.context as any).userInfo = {
+  bot.context.userInfo = {
     language: 'en'
   };
 
@@ -64,22 +64,22 @@ mongoose.connection.on('open', () => {
   bot.hears(
     mainKeyboardSearchMovies,
     updateUserTimestamp,
-    asyncWrapper(async (ctx: any) => await ctx.scene.enter('search'))
+    asyncWrapper(async (ctx: ContextMessageUpdate) => await ctx.scene.enter('search'))
   );
   bot.hears(
     mainKeyboardMyCollection,
     updateUserTimestamp,
-    asyncWrapper(async (ctx: any) => await ctx.scene.enter('movies'))
+    asyncWrapper(async (ctx: ContextMessageUpdate) => await ctx.scene.enter('movies'))
   );
   bot.hears(
     mainKeyboardSettings,
     updateUserTimestamp,
-    asyncWrapper(async (ctx: any) => await ctx.scene.enter('settings'))
+    asyncWrapper(async (ctx: ContextMessageUpdate) => await ctx.scene.enter('settings'))
   );
   bot.hears(mainKeyboardAbout, updateUserTimestamp, asyncWrapper(about));
   bot.hears(
     backKeyboardBack,
-    asyncWrapper(async (ctx: any) => {
+    asyncWrapper(async (ctx: ContextMessageUpdate) => {
       // If this method was triggered, it means that bot was updated when user was not in the main menu..
       logger.debug(ctx, 'Return to the main menu with the back button');
       await ctx.reply('Hey, what are you up to?', mainKeyboard);

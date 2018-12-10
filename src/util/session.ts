@@ -1,3 +1,4 @@
+import { ContextMessageUpdate } from 'telegraf';
 import logger from './logger';
 
 type SessionDataField = 'movies';
@@ -8,7 +9,7 @@ type SessionDataField = 'movies';
  * @param field - field to store in
  * @param data - data to store
  */
-export function saveToSession(ctx: any, field: SessionDataField, data: any) {
+export function saveToSession(ctx: ContextMessageUpdate, field: SessionDataField, data: any) {
   logger.debug(ctx, 'Saving %s to session', field);
   ctx.session[field] = data;
 }
@@ -17,7 +18,7 @@ export function saveToSession(ctx: any, field: SessionDataField, data: any) {
  * Removing data from the session
  * @param ctx - telegram context
  */
-export function deleteFromSession(ctx: any, field: SessionDataField) {
+export function deleteFromSession(ctx: ContextMessageUpdate, field: SessionDataField) {
   logger.debug(ctx, 'Deleting %s from session', field);
   delete ctx.session[field];
 }

@@ -1,3 +1,8 @@
 {
-  "checkout": "Yo!"
+  "scenes": {
+    "start": {
+      "welcome_back": "Glad to see you back! Now you can continue watching after the releases of your favorite movies! What do you want to do now?",
+      "new_account": "Account has been created successfully! Choose what you want to do next"
+    }
+  }
 }

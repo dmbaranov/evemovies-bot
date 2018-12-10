@@ -9,13 +9,13 @@ import {
 import { deleteFromSession } from '../../util/session';
 import logger from '../../util/logger';
 
-export const movieAction = async (ctx: any) =>
+export const movieAction = async (ctx: ContextMessageUpdate) =>
   await ctx.editMessageText(
     `You've chosen movie: ${ctx.movie.title}`,
     getMovieControlMenu(ctx.movie)
   );
 
-export const addMovieAction = async (ctx: any) => {
+export const addMovieAction = async (ctx: ContextMessageUpdate) => {
   const canAddResult = await canAddMovie(ctx);
 
   if (typeof canAddResult === 'string') {

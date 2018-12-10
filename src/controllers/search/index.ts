@@ -26,7 +26,7 @@ searcher.leave(async (ctx: ContextMessageUpdate) => {
 searcher.command('cancel', leave());
 searcher.hears(backKeyboardBack, leave());
 
-searcher.on('text', async (ctx: ContextMessageUpdate, next: any) => {
+searcher.on('text', async (ctx: ContextMessageUpdate, next: Function) => {
   logger.debug(ctx, 'Performing search for: %s', ctx.message.text);
 
   deleteFromSession(ctx, 'movies');

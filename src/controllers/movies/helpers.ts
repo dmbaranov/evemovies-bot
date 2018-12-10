@@ -42,7 +42,7 @@ export function getMovieControlMenu(movie: IMovie) {
  * Deletes movie from observable array and refreshes movies in session
  * @param ctx - telegram context
  */
-export async function deleteMovieFromObservables(ctx: any): Promise<IMovie[]> {
+export async function deleteMovieFromObservables(ctx: ContextMessageUpdate): Promise<IMovie[]> {
   const user = await User.findOneAndUpdate(
     { _id: ctx.from.id },
     {

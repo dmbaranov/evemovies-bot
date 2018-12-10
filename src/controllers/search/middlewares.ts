@@ -1,3 +1,4 @@
+import { ContextMessageUpdate } from 'telegraf';
 import { getMovieList } from './helpers';
 import logger from '../../util/logger';
 
@@ -6,7 +7,7 @@ import logger from '../../util/logger';
  * @param ctx - telegram context
  * @param next - next function
  */
-export async function exposeMovie(ctx: any, next: Function) {
+export async function exposeMovie(ctx: ContextMessageUpdate, next: Function) {
   const movies = await getMovieList(ctx);
   if (!movies) {
     logger.error(ctx, 'Attempt to pick a movie from the previous message');
