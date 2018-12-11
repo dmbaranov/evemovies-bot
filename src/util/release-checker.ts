@@ -41,7 +41,7 @@ export async function checkRussianMovieRelease(title: string, year: string) {
 
   let movieUrl = undefined;
   const torrents = JSON.parse(response)[1];
-  for (let key in torrents) {
+  for (const key in torrents) {
     if (
       torrents[key].label.match(/<i>(.*?)<\/i>/)[1].toLowerCase() === title.toLowerCase() &&
       torrents[key].label.match(/> \((\d{4})/)[1] === year
