@@ -14,14 +14,14 @@ const { leave } = Stage;
 const settings = new Scene('settings');
 
 settings.enter(async (ctx: ContextMessageUpdate) => {
-  const keyboard = getMainKeyboard();
+  const keyboard = getMainKeyboard(ctx);
 
-  await ctx.reply('Settings', keyboard);
-  await ctx.reply('What do you want to change?', backKeyboard);
+  await ctx.reply(ctx.i18n.t('scenes.settings.settings'), keyboard);
+  await ctx.reply(ctx.i18n.t('scenes.settings.what_to_change'), backKeyboard);
 });
 
 settings.leave(async (ctx: ContextMessageUpdate) => {
-  await ctx.reply('Hey, what are you up tp?', mainKeyboard);
+  await ctx.reply(ctx.i18n.t('shared.what_next'), mainKeyboard);
 });
 
 settings.command('cancel', leave());

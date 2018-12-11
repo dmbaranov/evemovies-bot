@@ -6,32 +6,32 @@ import { updateLanguage } from '../../util/language';
 
 export const languageSettingsAction = async (ctx: ContextMessageUpdate) => {
   const keyboard = getLanguageKeyboard();
-  await ctx.editMessageText(
-    'Pick language ❗️Movies will be tracked for the same language❗️',
-    keyboard
-  );
+  await ctx.editMessageText(ctx.i18n.t('scenes.settings.pick_language'), keyboard);
 };
 
 export const languageChangeAction = async (ctx: ContextMessageUpdate) => {
   logger.debug(ctx, 'Language was changed');
-  const keyboard = getMainKeyboard();
+  const keyboard = getMainKeyboard(ctx);
   const langData = JSON.parse(ctx.callbackQuery.data);
 
   await updateLanguage(ctx, langData.p);
-  await ctx.editMessageText('What do you want to change?', keyboard);
+  await ctx.editMessageText(ctx.i18n.t('scenes.settings.what_to_change'), keyboard);
 };
 
 export const accountSummaryAction = async (ctx: ContextMessageUpdate) => {
   const user = await User.findById(ctx.from.id);
-  const keyboard = getAccountSummaryKeyboard();
+  const keyboard = getAccountSummaryKeyboard(ctx);
 
   await ctx.editMessageText(
-    `Your account summary: \n\nUsername: ${user.username}\nID: ${user._id}`,
+    ctx.i18n.t('scenes.settings.account_summary', {
+      username: user.username,
+      id: user._id
+    }),
     keyboard
   );
 };
 
 export const closeAccountSummaryAction = async (ctx: ContextMessageUpdate) => {
-  const keyboard = getMainKeyboard();
-  await ctx.editMessageText('What do you want to change?', keyboard);
+  const keyboard = getMainKeyboard(ctx);
+  await ctx.editMessageText(ctx.i18n.t('scenes.settings.what_to_change'), keyboard);
 };

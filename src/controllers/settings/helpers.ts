@@ -1,14 +1,22 @@
-import { Extra, Markup } from 'telegraf';
+import { Extra, Markup, ContextMessageUpdate } from 'telegraf';
 
 /**
  * Returns main settings keyboard
  */
-export function getMainKeyboard() {
+export function getMainKeyboard(ctx: ContextMessageUpdate) {
   return Extra.HTML().markup((m: Markup) =>
     m.inlineKeyboard(
       [
-        m.callbackButton(`🗣 Language`, JSON.stringify({ a: 'languageSettings' }), false),
-        m.callbackButton(`🔑 Account summary`, JSON.stringify({ a: 'accountSummary' }), false)
+        m.callbackButton(
+          ctx.i18n.t('scenes.settings.language_button'),
+          JSON.stringify({ a: 'languageSettings' }),
+          false
+        ),
+        m.callbackButton(
+          ctx.i18n.t('scenes.settings.account_summary_button'),
+          JSON.stringify({ a: 'accountSummary' }),
+          false
+        )
       ],
       {}
     )
@@ -33,10 +41,16 @@ export function getLanguageKeyboard() {
 /**
  * Returns account summary keyboard
  */
-export function getAccountSummaryKeyboard() {
+export function getAccountSummaryKeyboard(ctx: ContextMessageUpdate) {
   return Extra.HTML().markup((m: Markup) =>
     m.inlineKeyboard(
-      [m.callbackButton(`Back`, JSON.stringify({ a: 'closeAccountSummary' }), false)],
+      [
+        m.callbackButton(
+          ctx.i18n.t('scenes.settings.back_button'),
+          JSON.stringify({ a: 'closeAccountSummary' }),
+          false
+        )
+      ],
       {}
     )
   );

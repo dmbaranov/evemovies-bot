@@ -25,6 +25,15 @@
       "reason_already_observing": "You're already observing this movie.",
       "welcome_to_search": "Here you can search for movies! Just type the title in and hit enter. Use /cancel or inline keyboard to return",
       "no_movies_found": "No movies were found... Try to specify your request or /cancel to stop searching"
+    },
+    "settings": {
+      "pick_language": "Pick language ❗️Movies will be tracked for the same language❗️",
+      "what_to_change": "What do you want to change?",
+      "account_summary": "Your account summary:\n\nUsername: ${username}\nID: ${id}",
+      "language_button": "🗣 Language",
+      "account_summary_button": "🔑 Account summary",
+      "back_button": "Back",
+      "settings": "Settings"
     }
   },
   "shared": {
