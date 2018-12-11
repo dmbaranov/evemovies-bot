@@ -1,15 +1,33 @@
-import { Markup } from 'telegraf';
+import { Markup, ContextMessageUpdate } from 'telegraf';
 
-export const backKeyboardBack = '◀️ Back';
-export let backKeyboard: any = Markup.keyboard([backKeyboardBack]);
-backKeyboard = backKeyboard.resize().extra();
+export const getBackKeyboard = (ctx: ContextMessageUpdate) => {
+  const backKeyboardBack = ctx.i18n.t('keyboards.back_keyboard.back');
+  let backKeyboard: any = Markup.keyboard([backKeyboardBack]);
 
-export const mainKeyboardSearchMovies = '👀 Search';
-export const mainKeyboardMyCollection = '🎥 My collection';
-export const mainKeyboardSettings = '⚙️ Settings';
-export const mainKeyboardAbout = '❓ About';
-export let mainKeyboard: any = Markup.keyboard([
-  [mainKeyboardSearchMovies, mainKeyboardMyCollection] as any,
-  [mainKeyboardSettings, mainKeyboardAbout]
-]);
-mainKeyboard = mainKeyboard.resize().extra();
+  backKeyboard = backKeyboard.resize().extra();
+
+  return {
+    backKeyboard,
+    backKeyboardBack
+  };
+};
+
+export const getMainKeyboard = (ctx: ContextMessageUpdate) => {
+  const mainKeyboardSearchMovies = ctx.i18n.t('keyboards.main_keyboard.search');
+  const mainKeyboardMyCollection = ctx.i18n.t('keyboards.main_keyboard.movies');
+  const mainKeyboardSettings = ctx.i18n.t('keyboards.main_keyboard.settings');
+  const mainKeyboardAbout = ctx.i18n.t('keyboards.main_keyboard.about');
+  let mainKeyboard: any = Markup.keyboard([
+    [mainKeyboardSearchMovies, mainKeyboardMyCollection] as any,
+    [mainKeyboardSettings, mainKeyboardAbout]
+  ]);
+  mainKeyboard = mainKeyboard.resize().extra();
+
+  return {
+    mainKeyboard,
+    mainKeyboardSearchMovies,
+    mainKeyboardMyCollection,
+    mainKeyboardSettings,
+    mainKeyboardAbout
+  };
+};

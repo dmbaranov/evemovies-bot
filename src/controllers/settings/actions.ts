@@ -3,6 +3,7 @@ import { getMainKeyboard, getLanguageKeyboard, getAccountSummaryKeyboard } from 
 import logger from '../../util/logger';
 import User from '../../models/User';
 import { updateLanguage } from '../../util/language';
+import { getBackKeyboard } from '../../util/keyboards';
 
 export const languageSettingsAction = async (ctx: ContextMessageUpdate) => {
   const keyboard = getLanguageKeyboard();
@@ -11,11 +12,13 @@ export const languageSettingsAction = async (ctx: ContextMessageUpdate) => {
 
 export const languageChangeAction = async (ctx: ContextMessageUpdate) => {
   logger.debug(ctx, 'Language was changed');
-  const keyboard = getMainKeyboard(ctx);
   const langData = JSON.parse(ctx.callbackQuery.data);
-
   await updateLanguage(ctx, langData.p);
-  await ctx.editMessageText(ctx.i18n.t('scenes.settings.what_to_change'), keyboard);
+
+  const keyboard = getMainKeyboard(ctx);
+  const { backKeyboard } = getBackKeyboard(ctx);
+  await ctx.reply('Language has been changed!', keyboard);
+  await ctx.reply(ctx.i18n.t('scenes.settings.what_to_change'), backKeyboard);
 };
 
 export const accountSummaryAction = async (ctx: ContextMessageUpdate) => {

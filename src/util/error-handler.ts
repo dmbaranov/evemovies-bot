@@ -11,7 +11,7 @@ const asyncWrapper = (fn: Function) => {
       return await fn(ctx);
     } catch (error) {
       logger.error(ctx, 'General error, %O', error);
-      ctx.reply('An error has occured... Please, try again');
+      ctx.reply(ctx.i18n.t('shared.something_went_wrong'));
       return next();
     }
   };

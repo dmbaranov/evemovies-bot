@@ -39,5 +39,16 @@
   "shared": {
     "what_next": "Hey, what are you up to?",
     "something_went_wrong": "Something went wrong. Try one more time.."
+  },
+  "keyboards": {
+    "back_keyboard": {
+      "back": "◀️ Back"
+    },
+    "main_keyboard": {
+      "search": "👀 Search",
+      "movies": "🎥 My collection",
+      "settings": "⚙️ Settings",
+      "about": "❓ About"
+    }
   }
 }

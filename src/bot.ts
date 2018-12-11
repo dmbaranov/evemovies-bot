@@ -3,7 +3,7 @@ require('./models');
 import fs from 'fs';
 import path from 'path';
 import Telegraf, { ContextMessageUpdate } from 'telegraf';
-import TelegrafI18n from 'telegraf-i18n';
+import TelegrafI18n, { match } from 'telegraf-i18n';
 import Stage from 'telegraf/stage';
 import session from 'telegraf/session';
 import mongoose from 'mongoose';
@@ -16,14 +16,7 @@ import moviesScene from './controllers/movies';
 import settingsScene from './controllers/settings';
 import { checkUnreleasedMovies } from './util/notifier';
 import asyncWrapper from './util/error-handler';
-import {
-  backKeyboardBack,
-  mainKeyboardSearchMovies,
-  mainKeyboardMyCollection,
-  mainKeyboardSettings,
-  mainKeyboardAbout,
-  mainKeyboard
-} from './util/keyboards';
+import { getMainKeyboard } from './util/keyboards';
 import { updateUserTimestamp } from './middlewares/update-user-timestamp';
 import { getUserInfo } from './middlewares/user-info';
 
@@ -62,26 +55,28 @@ mongoose.connection.on('open', () => {
 
   bot.start(start);
   bot.hears(
-    mainKeyboardSearchMovies,
+    match('keyboards.main_keyboard.search'),
     updateUserTimestamp,
     asyncWrapper(async (ctx: ContextMessageUpdate) => await ctx.scene.enter('search'))
   );
   bot.hears(
-    mainKeyboardMyCollection,
+    match('keyboards.main_keyboard.movies'),
     updateUserTimestamp,
     asyncWrapper(async (ctx: ContextMessageUpdate) => await ctx.scene.enter('movies'))
   );
   bot.hears(
-    mainKeyboardSettings,
+    match('keyboards.main_keyboard.settings'),
     updateUserTimestamp,
     asyncWrapper(async (ctx: ContextMessageUpdate) => await ctx.scene.enter('settings'))
   );
-  bot.hears(mainKeyboardAbout, updateUserTimestamp, asyncWrapper(about));
+  bot.hears(match('keyboards.main_keyboard.about'), updateUserTimestamp, asyncWrapper(about));
   bot.hears(
-    backKeyboardBack,
+    match('keyboards.back_keyboard.back'),
     asyncWrapper(async (ctx: ContextMessageUpdate) => {
       // If this method was triggered, it means that bot was updated when user was not in the main menu..
       logger.debug(ctx, 'Return to the main menu with the back button');
+      const { mainKeyboard } = getMainKeyboard(ctx);
+
       await ctx.reply('Hey, what are you up to?', mainKeyboard);
     })
   );
