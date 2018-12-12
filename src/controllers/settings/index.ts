@@ -2,7 +2,7 @@ import { ContextMessageUpdate } from 'telegraf';
 import { match } from 'telegraf-i18n';
 import Stage from 'telegraf/stage';
 import Scene from 'telegraf/scenes/base';
-import { getMainKeyboard as getSettingsMainKeyboard } from './helpers';
+import { getMainKeyboard as getSettingsMainKeyboard, sendMessageToBeDeletedLater } from './helpers';
 import {
   languageSettingsAction,
   languageChangeAction,
@@ -10,21 +10,24 @@ import {
   closeAccountSummaryAction
 } from './actions';
 import { getMainKeyboard, getBackKeyboard } from '../../util/keyboards';
-const { leave } = Stage;
+import { deleteFromSession } from '../../util/session';
 
+const { leave } = Stage;
 const settings = new Scene('settings');
 
 settings.enter(async (ctx: ContextMessageUpdate) => {
   const keyboard = getSettingsMainKeyboard(ctx);
   const { backKeyboard } = getBackKeyboard(ctx);
 
-  await ctx.reply(ctx.i18n.t('scenes.settings.settings'), keyboard);
-  await ctx.reply(ctx.i18n.t('scenes.settings.what_to_change'), backKeyboard);
+  deleteFromSession(ctx, 'settingsScene');
+  await sendMessageToBeDeletedLater(ctx, 'scenes.settings.what_to_change', keyboard);
+  await sendMessageToBeDeletedLater(ctx, 'scenes.settings.settings', backKeyboard);
 });
 
 settings.leave(async (ctx: ContextMessageUpdate) => {
   const { mainKeyboard } = getMainKeyboard(ctx);
   await ctx.reply(ctx.i18n.t('shared.what_next'), mainKeyboard);
+  deleteFromSession(ctx, 'settingsScene');
 });
 
 settings.command('cancel', leave());

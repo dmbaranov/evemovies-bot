@@ -1,4 +1,7 @@
 import { Extra, Markup, ContextMessageUpdate } from 'telegraf';
+import { get } from 'lodash';
+import { ExtraReplyMessage } from 'telegraf/typings/telegram-types';
+import { saveToSession } from '../../util/session';
 
 /**
  * Returns main settings keyboard
@@ -54,4 +57,29 @@ export function getAccountSummaryKeyboard(ctx: ContextMessageUpdate) {
       {}
     )
   );
+}
+
+/**
+ * Send message and saving it to the session. Later it can be deleted.
+ * Used to avoid messages duplication
+ * @param translationKey - translation key
+ * @param extra - extra for the message, e.g. keyboard
+ */
+export async function sendMessageToBeDeletedLater(
+  ctx: ContextMessageUpdate,
+  translationKey: string,
+  extra?: ExtraReplyMessage
+) {
+  const message: any = await ctx.reply(ctx.i18n.t(translationKey), extra);
+  const messagesToDelete = get(ctx.session, 'settingsScene.messagesToDelete', []);
+
+  saveToSession(ctx, 'settingsScene', {
+    messagesToDelete: [
+      ...messagesToDelete,
+      {
+        chatId: message.chat.id,
+        messageId: message.message_id
+      }
+    ]
+  });
 }

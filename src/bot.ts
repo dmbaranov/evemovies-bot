@@ -77,7 +77,7 @@ mongoose.connection.on('open', () => {
       logger.debug(ctx, 'Return to the main menu with the back button');
       const { mainKeyboard } = getMainKeyboard(ctx);
 
-      await ctx.reply('Hey, what are you up to?', mainKeyboard);
+      await ctx.reply(ctx.i18n.t('shared.what_next'), mainKeyboard);
     })
   );
 
