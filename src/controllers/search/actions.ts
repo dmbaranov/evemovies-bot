@@ -9,13 +9,16 @@ import {
 import { deleteFromSession } from '../../util/session';
 import logger from '../../util/logger';
 
-export const movieAction = async (ctx: ContextMessageUpdate) =>
+export const movieAction = async (ctx: ContextMessageUpdate) => {
   await ctx.editMessageText(
     ctx.i18n.t('scenes.search.chosen_movie', {
       title: ctx.movie.title
     }),
     getMovieControlMenu(ctx)
   );
+
+  await ctx.answerCbQuery();
+};
 
 export const addMovieAction = async (ctx: ContextMessageUpdate) => {
   const canAddResult = await canAddMovie(ctx);
@@ -33,6 +36,7 @@ export const addMovieAction = async (ctx: ContextMessageUpdate) => {
     );
   }
 
+  await ctx.answerCbQuery();
   deleteFromSession(ctx, 'movies');
 };
 
@@ -43,4 +47,6 @@ export const backAction = async (ctx: ContextMessageUpdate) => {
     ctx.i18n.t('scenes.search.list_of_found_movies'),
     getMoviesMenu(movies)
   );
+
+  await ctx.answerCbQuery();
 };

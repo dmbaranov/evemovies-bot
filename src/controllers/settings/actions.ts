@@ -32,6 +32,7 @@ export const languageChangeAction = async (ctx: ContextMessageUpdate) => {
 };
 
 export const accountSummaryAction = async (ctx: ContextMessageUpdate) => {
+  logger.debug(ctx, 'Checking account summary');
   const user = await User.findById(ctx.from.id);
   const keyboard = getAccountSummaryKeyboard(ctx);
 
@@ -42,9 +43,11 @@ export const accountSummaryAction = async (ctx: ContextMessageUpdate) => {
     }),
     keyboard
   );
+  await ctx.answerCbQuery();
 };
 
 export const closeAccountSummaryAction = async (ctx: ContextMessageUpdate) => {
   const keyboard = getMainKeyboard(ctx);
   await ctx.editMessageText(ctx.i18n.t('scenes.settings.what_to_change'), keyboard);
+  await ctx.answerCbQuery();
 };

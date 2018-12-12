@@ -2,7 +2,7 @@ import { ContextMessageUpdate } from 'telegraf';
 import { getMovieControlMenu, getMoviesMenu, deleteMovieFromObservables } from './helpers';
 import logger from '../../util/logger';
 
-export const movieAction = async (ctx: ContextMessageUpdate) =>
+export const movieAction = async (ctx: ContextMessageUpdate) => {
   await ctx.editMessageText(
     ctx.i18n.t('scenes.movies.chosen_movie', {
       title: ctx.movie.title
@@ -10,11 +10,17 @@ export const movieAction = async (ctx: ContextMessageUpdate) =>
     getMovieControlMenu(ctx)
   );
 
-export const backAction = async (ctx: ContextMessageUpdate) =>
+  await ctx.answerCbQuery();
+};
+
+export const backAction = async (ctx: ContextMessageUpdate) => {
   await ctx.editMessageText(
     ctx.i18n.t('scenes.movies.list_of_movies'),
     getMoviesMenu(ctx.session.movies)
   );
+
+  await ctx.answerCbQuery();
+};
 
 export const deleteAction = async (ctx: ContextMessageUpdate) => {
   logger.debug(ctx, 'Removing movie %s from collection', ctx.movie._id);
@@ -24,4 +30,6 @@ export const deleteAction = async (ctx: ContextMessageUpdate) => {
     ctx.i18n.t('scenes.movies.list_of_movies'),
     getMoviesMenu(updatedMovieList)
   );
+
+  await ctx.answerCbQuery();
 };

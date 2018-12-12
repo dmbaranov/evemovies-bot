@@ -6,9 +6,8 @@ import logger from '../../util/logger';
 import { deleteFromSession } from '../../util/session';
 import { getMoviesMenu, getMovieList } from './helpers';
 import { getMainKeyboard, getBackKeyboard } from '../../util/keyboards';
-import { movieAction, addMovieAction } from './actions';
+import { movieAction, addMovieAction, backAction } from './actions';
 import { exposeMovie } from './middlewares';
-import { backAction } from '../movies/actions';
 
 const { leave } = Stage;
 const searcher = new Scene('search');
