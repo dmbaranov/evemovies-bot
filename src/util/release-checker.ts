@@ -1,14 +1,23 @@
 import * as rp from 'request-promise';
+import cheerio from 'cheerio';
 import logger from '../util/logger';
+
+interface ICheckerConfig {
+  imdbid: string;
+  title?: string;
+  year?: number;
+}
 
 /**
  * Returns true of movie has been released, false otherwise
  * @param imdbid - movie id from imdb
  */
-export async function checkMovieRelease(imdbid: string): Promise<Boolean> {
-  logger.debug(undefined, 'Checking release for movie %s', imdbid);
+export async function checkMovieRelease(config: ICheckerConfig): Promise<Boolean> {
+  logger.debug(undefined, 'Checking release for movie %s', config.imdbid);
 
-  const url = `http://api.apiumando.info/movie?cb=&quality=720p,1080p,3d&page=1&imdb=${imdbid}`;
+  const url = `http://api.apiumando.info/movie?cb=&quality=720p,1080p,3d&page=1&imdb=${
+    config.imdbid
+  }`;
   let response;
 
   try {
@@ -22,15 +31,10 @@ export async function checkMovieRelease(imdbid: string): Promise<Boolean> {
   return torrents.items && torrents.items.length > 0;
 }
 
-export async function checkRussianMovieRelease(title: string, year: string) {
-  // For the future purposes... If there will be a day when I'll use filmopotok.ru for russian torrents
-  // As for now, I can't determine whether the torrents has a good or bad quality (e.g. ad, etc)
-  // Use this values to determine whether the quality "seems" to be good or not
-  // translation >= 25
-  // quality >= 12
-  logger.debug(undefined, 'Checking russian release for movie %s', title);
+export async function checkRussianMovieRelease(config: ICheckerConfig) {
+  logger.debug(undefined, 'Checking russian release for movie %s', config.title);
 
-  const url = encodeURI(`http://filmpotok.ru/search/autocomplete/all/${title}`);
+  const url = encodeURI(`http://scarabey.org/?s=${config.title}`);
   let response;
 
   try {
@@ -39,19 +43,35 @@ export async function checkRussianMovieRelease(title: string, year: string) {
     return false;
   }
 
-  let movieUrl = undefined;
-  const torrents = JSON.parse(response)[1];
-  for (const key in torrents) {
-    if (
-      torrents[key].label.match(/<i>(.*?)<\/i>/)[1].toLowerCase() === title.toLowerCase() &&
-      torrents[key].label.match(/> \((\d{4})/)[1] === year
-    ) {
-      movieUrl = torrents[key].href;
-      break;
+  let released = false;
+  const $ = cheerio.load(response);
+
+  $('.post-row4').each((index, elem) => {
+    if (!$(elem).html().length) {
+      return;
     }
-  }
 
-  if (!movieUrl) return false;
+    try {
+      const movieTitle = $(elem)
+        .find('.archive-note3 a')
+        .html()
+        .match(/\/ ([a-zA-Z0-9_ ]*) /)[1]
+        .toLocaleLowerCase();
 
-  console.log(movieUrl);
+      const movieYear = $(elem)
+        .find('.archive-year strong')
+        .text();
+
+      if (config.title.toLowerCase() === movieTitle && config.year === +movieYear) released = true;
+    } catch (e) {
+      // TODO: make if instead of try catch
+    }
+  });
+
+  return released;
 }
+
+export const releaseChecker = {
+  en: checkMovieRelease,
+  ru: checkRussianMovieRelease
+};

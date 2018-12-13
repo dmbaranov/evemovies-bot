@@ -4,7 +4,8 @@ export interface IMovie extends Document {
   _id: string;
   title: string;
   year: number;
-  released: boolean;
+  released: boolean; // TODO: could be deleted
+  unreleasedLanguages: string[];
 }
 
 export const MovieSchema = new mongoose.Schema(
@@ -12,7 +13,8 @@ export const MovieSchema = new mongoose.Schema(
     _id: String,
     title: String,
     year: Number,
-    released: Boolean
+    released: Boolean,
+    unreleasedLanguages: [String]
   },
   { _id: false }
 );

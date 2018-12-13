@@ -5,7 +5,7 @@ import User from '../../models/User';
 import { search } from '../../util/imdb';
 import logger from '../../util/logger';
 import { saveToSession, deleteFromSession } from '../../util/session';
-import { checkMovieRelease } from '../../util/release-checker';
+import { releaseChecker } from '../../util/release-checker';
 
 /**
  * Returning list of movies. Taken either from imdb API or from the session
@@ -78,30 +78,30 @@ export function getMovieControlMenu(ctx: ContextMessageUpdate) {
 export async function addMovieForUser(ctx: ContextMessageUpdate) {
   logger.debug(ctx, 'Adding movie %s to observables', ctx.movie.name);
 
-  let movieImdb;
   const movie: SearchResult = ctx.movie;
-  const existingMovie = await Movie.findById(movie.imdbid);
-
-  if (existingMovie) {
-    movieImdb = existingMovie._id;
-  } else {
-    const newMovie = new Movie({
+  const movieDoc = await Movie.findOneAndUpdate(
+    {
+      _id: movie.imdbid
+    },
+    {
       _id: movie.imdbid,
       title: movie.title,
       year: movie.year,
-      released: false
-    });
-
-    await newMovie.save();
-    movieImdb = movie.imdbid;
-  }
+      released: false,
+      $addToSet: { unreleasedLanguages: ctx.userInfo.language }
+    },
+    {
+      new: true,
+      upsert: true
+    }
+  );
 
   await User.findOneAndUpdate(
     {
       _id: ctx.from.id
     },
     {
-      $addToSet: { observableMovies: movieImdb }
+      $addToSet: { observableMovies: movieDoc._id }
     },
     {
       new: true
@@ -117,7 +117,12 @@ export async function addMovieForUser(ctx: ContextMessageUpdate) {
  * @param movie - single movie
  */
 export async function canAddMovie(ctx: ContextMessageUpdate) {
-  const movieRelease = await checkMovieRelease(ctx.movie.imdbid);
+  const movieRelease = await releaseChecker[ctx.userInfo.language]({
+    imdbid: ctx.movie.imdbid,
+    title: ctx.movie.title,
+    year: ctx.movie.year
+  });
+
   const user = await User.findById(ctx.from.id);
 
   if (movieRelease) {

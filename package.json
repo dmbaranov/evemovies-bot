@@ -17,6 +17,7 @@
     "watch-debug": "concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"cyan.bold,green.bold\" \"npm run watch-ts\" \"npm run serve-debug\""
   },
   "dependencies": {
+    "cheerio": "^1.0.0-rc.2",
     "cloudscraper": "^1.5.0",
     "dotenv": "^6.1.0",
     "imdb-api": "^4.0.2",
@@ -29,6 +30,7 @@
     "winston": "^3.1.0"
   },
   "devDependencies": {
+    "@types/cheerio": "^0.22.10",
     "@types/dotenv": "^6.1.0",
     "@types/lodash": "^4.14.119",
     "@types/mongoose": "^5.3.1",

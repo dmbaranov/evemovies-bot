@@ -70,6 +70,7 @@ export async function sendMessageToBeDeletedLater(
   translationKey: string,
   extra?: ExtraReplyMessage
 ) {
+  (ctx as any).webhookReply = false;
   const message: any = await ctx.reply(ctx.i18n.t(translationKey), extra);
   const messagesToDelete = get(ctx.session, 'settingsScene.messagesToDelete', []);
 
