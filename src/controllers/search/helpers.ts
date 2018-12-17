@@ -1,8 +1,8 @@
 import { Markup, Extra, ContextMessageUpdate } from 'telegraf';
-import { SearchResult, SearchResults } from 'imdb-api';
+import { SearchResult } from 'imdb-api';
 import Movie from '../../models/Movie';
 import User from '../../models/User';
-import { search } from '../../util/imdb';
+import { movieSearch } from '../../util/movie-search';
 import logger from '../../util/logger';
 import { saveToSession, deleteFromSession } from '../../util/session';
 import { releaseChecker } from '../../util/release-checker';
@@ -11,14 +11,14 @@ import { releaseChecker } from '../../util/release-checker';
  * Returning list of movies. Taken either from imdb API or from the session
  * @param ctx - telegram context
  */
-export async function getMovieList(ctx: ContextMessageUpdate): Promise<SearchResults> {
+export async function getMovieList(ctx: ContextMessageUpdate): Promise<SearchResult[]> {
   if (ctx.session.movies) return ctx.session.movies;
 
-  let movies: SearchResults;
+  let movies;
 
   try {
     logger.debug(ctx, 'Searching for movie %s', ctx.message.text);
-    movies = await search({ name: ctx.message.text });
+    movies = await movieSearch[ctx.userInfo.language]({ name: ctx.message.text });
     saveToSession(ctx, 'movies', movies);
 
     return movies;
@@ -31,10 +31,10 @@ export async function getMovieList(ctx: ContextMessageUpdate): Promise<SearchRes
  * Displays menu with a list of movies
  * @param movies - list of movies
  */
-export function getMoviesMenu(movies: SearchResults) {
+export function getMoviesMenu(movies: SearchResult[]) {
   return Extra.HTML().markup((m: Markup) =>
     m.inlineKeyboard(
-      movies.results.map(item => [
+      movies.map(item => [
         m.callbackButton(
           `(${item.year}) ${item.title}`,
           JSON.stringify({ a: 'movie', p: item.imdbid }),
@@ -76,8 +76,6 @@ export function getMovieControlMenu(ctx: ContextMessageUpdate) {
  * @param movie - single movie
  */
 export async function addMovieForUser(ctx: ContextMessageUpdate) {
-  logger.debug(ctx, 'Adding movie %s to observables', ctx.movie.name);
-
   const movie: SearchResult = ctx.movie;
   const movieDoc = await Movie.findOneAndUpdate(
     {

@@ -4,15 +4,15 @@ import logger from '../util/logger';
 
 interface ICheckerConfig {
   imdbid: string;
-  title?: string;
-  year?: number;
+  title: string;
+  year: number;
 }
 
 /**
  * Returns true of movie has been released, false otherwise
  * @param imdbid - movie id from imdb
  */
-export async function checkMovieRelease(config: ICheckerConfig): Promise<Boolean> {
+async function checkMovieRelease(config: ICheckerConfig): Promise<Boolean> {
   logger.debug(undefined, 'Checking release for movie %s', config.imdbid);
 
   const url = `http://api.apiumando.info/movie?cb=&quality=720p,1080p,3d&page=1&imdb=${
@@ -31,7 +31,7 @@ export async function checkMovieRelease(config: ICheckerConfig): Promise<Boolean
   return torrents.items && torrents.items.length > 0;
 }
 
-export async function checkRussianMovieRelease(config: ICheckerConfig) {
+async function checkRussianMovieRelease(config: ICheckerConfig) {
   logger.debug(undefined, 'Checking russian release for movie %s', config.title);
 
   const url = encodeURI(`http://scarabey.org/?s=${config.title}`);
@@ -44,7 +44,9 @@ export async function checkRussianMovieRelease(config: ICheckerConfig) {
   }
 
   let released = false;
-  const $ = cheerio.load(response);
+  const $ = cheerio.load(response, {
+    decodeEntities: false
+  });
 
   $('.post-row4').each((index, elem) => {
     if (!$(elem).html().length) {
@@ -52,10 +54,19 @@ export async function checkRussianMovieRelease(config: ICheckerConfig) {
     }
 
     try {
+      // This is english title
+      // const movieTitle = $(elem)
+      //   .find('.archive-note3 a')
+      //   .html()
+      //   .match(/\/ ([a-zA-Z0-9_ ]*) /)[1]
+      //   .toLocaleLowerCase();
+
       const movieTitle = $(elem)
         .find('.archive-note3 a')
         .html()
-        .match(/\/ ([a-zA-Z0-9_ ]*) /)[1]
+        .split('/')[0]
+        .replace(/\"/g, '')
+        .trim()
         .toLocaleLowerCase();
 
       const movieYear = $(elem)
@@ -65,6 +76,7 @@ export async function checkRussianMovieRelease(config: ICheckerConfig) {
       if (config.title.toLowerCase() === movieTitle && config.year === +movieYear) released = true;
     } catch (e) {
       // TODO: make if instead of try catch
+      logger.error(undefined, 'Catch... %O', e);
     }
   });
 

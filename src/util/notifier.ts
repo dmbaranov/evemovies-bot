@@ -1,4 +1,4 @@
-import { checkMovieRelease, releaseChecker } from './release-checker';
+import { releaseChecker } from './release-checker';
 import logger from './logger';
 import { sleep } from './common';
 import Movie, { IMovie } from '../models/Movie';

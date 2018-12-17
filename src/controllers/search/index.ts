@@ -32,7 +32,7 @@ searcher.on('text', async (ctx: ContextMessageUpdate, next: Function) => {
   deleteFromSession(ctx, 'movies');
   const movies = await getMovieList(ctx);
 
-  if (!movies) {
+  if (!movies || !movies.length) {
     await ctx.reply(ctx.i18n.t('scenes.search.no_movies_found'));
     return next();
   }

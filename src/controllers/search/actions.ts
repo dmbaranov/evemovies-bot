@@ -31,7 +31,7 @@ export const addMovieAction = async (ctx: ContextMessageUpdate) => {
     await addMovieForUser(ctx);
     await ctx.editMessageText(
       ctx.i18n.t('scenes.search.added_movie_to_lib', {
-        title: ctx.movie.name
+        title: ctx.movie.title
       })
     );
   }

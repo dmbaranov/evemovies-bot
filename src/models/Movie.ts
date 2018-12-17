@@ -14,7 +14,7 @@ export const MovieSchema = new mongoose.Schema(
     title: String,
     year: Number,
     released: Boolean,
-    unreleasedLanguages: [String]
+    unreleasedLanguages: [String] // TODO: change to a string value instead of array. Because changed from popcorntime to filmopotok, each movie will be checked separately for different languages
   },
   { _id: false }
 );
