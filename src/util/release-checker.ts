@@ -54,18 +54,10 @@ async function checkRussianMovieRelease(config: ICheckerConfig) {
     }
 
     try {
-      // This is english title
-      // const movieTitle = $(elem)
-      //   .find('.archive-note3 a')
-      //   .html()
-      //   .match(/\/ ([a-zA-Z0-9_ ]*) /)[1]
-      //   .toLocaleLowerCase();
-
       const movieTitle = $(elem)
         .find('.archive-note3 a')
         .html()
-        .split('/')[0]
-        .replace(/\"/g, '')
+        .replace(/ё/, 'е')
         .trim()
         .toLocaleLowerCase();
 
@@ -73,7 +65,9 @@ async function checkRussianMovieRelease(config: ICheckerConfig) {
         .find('.archive-year strong')
         .text();
 
-      if (config.title.toLowerCase() === movieTitle && config.year === +movieYear) released = true;
+      if (movieTitle.includes(config.title.toLowerCase()) && +config.year === +movieYear) {
+        released = true;
+      }
     } catch (e) {
       // TODO: make if instead of try catch
       logger.error(undefined, 'Catch... %O', e);

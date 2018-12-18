@@ -83,7 +83,7 @@ export async function addMovieForUser(ctx: ContextMessageUpdate) {
     },
     {
       _id: movie.imdbid,
-      title: movie.title,
+      title: movie.title.replace(/ё/, 'e'),
       year: movie.year,
       released: false,
       $addToSet: { unreleasedLanguages: ctx.userInfo.language }
