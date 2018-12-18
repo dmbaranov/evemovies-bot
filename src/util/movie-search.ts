@@ -38,19 +38,14 @@ async function filmopotokSearch(opts: SearchRequest): Promise<SearchResult[]> {
   const torrents = JSON.parse(response)[1];
   return Object.values(torrents)
     .filter((item: any) => item.href.startsWith('/film'))
-    .map((item: any) => {
-      console.log(item.value);
-      console.log(item.label.match(/<i>(.*?)<\/i>/)[1]);
-      console.log(item.label.match(/> \((\d{4})/)[1]);
-      return {
-        title: item.value,
-        name: item.label.match(/<i>(.*?)<\/i>/)[1],
-        year: item.label.match(/> \((\d{4})/)[1],
-        imdbid: item.slug.slice(0, 55), // Telegram can't pass more than 64 bytes as a callback data
-        type: undefined,
-        poster: undefined
-      };
-    });
+    .map((item: any) => ({
+      title: item.value,
+      name: item.label.match(/<i>(.*?)<\/i>/)[1],
+      year: item.label.match(/> \((\d{4})/)[1],
+      imdbid: item.slug.slice(0, 40), // Telegram can't pass more than 64 bytes as a callback data
+      type: undefined,
+      poster: undefined
+    }));
 }
 
 export const movieSearch = {

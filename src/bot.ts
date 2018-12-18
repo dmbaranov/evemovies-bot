@@ -82,7 +82,7 @@ mongoose.connection.on('open', () => {
   );
 
   bot.catch((error: any) => {
-    logger.debug(undefined, 'Global error has happened, %O', error);
+    logger.error(undefined, 'Global error has happened, %O', error);
   });
 
   setInterval(checkUnreleasedMovies, 86400000);
