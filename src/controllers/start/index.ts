@@ -32,7 +32,6 @@ start.enter(async (ctx: ContextMessageUpdate) => {
 
     await newUser.save();
     await ctx.reply('Choose language / Выбери язык', languageKeyboard);
-    await ctx.answerCbQuery();
   }
 });
 
@@ -40,6 +39,7 @@ start.leave(async (ctx: ContextMessageUpdate) => {
   const { mainKeyboard } = getMainKeyboard(ctx);
 
   await ctx.reply(ctx.i18n.t('shared.what_next'), mainKeyboard);
+  await ctx.answerCbQuery();
 });
 
 start.command('saveme', leave());
