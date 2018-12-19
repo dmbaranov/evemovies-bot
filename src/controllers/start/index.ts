@@ -39,11 +39,13 @@ start.leave(async (ctx: ContextMessageUpdate) => {
   const { mainKeyboard } = getMainKeyboard(ctx);
 
   await ctx.reply(ctx.i18n.t('shared.what_next'), mainKeyboard);
-  await ctx.answerCbQuery();
 });
 
 start.command('saveme', leave());
 start.action(/languageChange/, languageChangeAction);
-start.action(/confirmAccount/, leave());
+start.action(/confirmAccount/, async (ctx: ContextMessageUpdate, next: Function) => {
+  await ctx.answerCbQuery();
+  ctx.scene.leave();
+});
 
 export default start;
