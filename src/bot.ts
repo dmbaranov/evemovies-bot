@@ -9,8 +9,8 @@ import session from 'telegraf/session';
 import mongoose from 'mongoose';
 import rp from 'request-promise';
 import logger from './util/logger';
-import start from './controllers/start';
 import about from './controllers/about';
+import startScene from './controllers/start';
 import searchScene from './controllers/search';
 import moviesScene from './controllers/movies';
 import settingsScene from './controllers/settings';
@@ -35,7 +35,7 @@ mongoose.connection.on('error', err => {
 
 mongoose.connection.on('open', () => {
   const bot = new Telegraf(process.env.TELEGRAM_TOKEN);
-  const stage = new Stage([searchScene, moviesScene, settingsScene]);
+  const stage = new Stage([startScene, searchScene, moviesScene, settingsScene]);
   const i18n = new TelegrafI18n({
     defaultLanguage: 'en',
     directory: path.resolve(__dirname, 'locales'),
@@ -53,7 +53,13 @@ mongoose.connection.on('open', () => {
   bot.use(stage.middleware());
   bot.use(getUserInfo);
 
-  bot.start(start);
+  bot.command('saveme', async (ctx: ContextMessageUpdate) => {
+    logger.debug(ctx, 'User uses /saveme command');
+
+    const { mainKeyboard } = getMainKeyboard(ctx);
+    await ctx.reply(ctx.i18n.t('shared.what_next'), mainKeyboard);
+  });
+  bot.start(asyncWrapper(async (ctx: ContextMessageUpdate) => ctx.scene.enter('start')));
   bot.hears(
     match('keyboards.main_keyboard.search'),
     updateUserTimestamp,
@@ -110,4 +116,5 @@ async function startProdMode(bot: Telegraf<ContextMessageUpdate>) {
   });
 
   bot.startWebhook(`/${process.env.TELEGRAM_TOKEN}`, tlsOptions, 8443);
+  checkUnreleasedMovies();
 }

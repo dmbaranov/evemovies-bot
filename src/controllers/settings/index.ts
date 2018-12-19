@@ -30,7 +30,7 @@ settings.leave(async (ctx: ContextMessageUpdate) => {
   deleteFromSession(ctx, 'settingsScene');
 });
 
-settings.command('cancel', leave());
+settings.command('saveme', leave());
 settings.hears(match('keyboards.back_keyboard.back'), leave());
 
 settings.action(/languageSettings/, languageSettingsAction);

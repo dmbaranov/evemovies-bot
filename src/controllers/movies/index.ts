@@ -18,8 +18,12 @@ movies.enter(async (ctx: ContextMessageUpdate) => {
   const movies = user.observableMovies;
   saveToSession(ctx, 'movies', movies);
 
-  await ctx.reply(ctx.i18n.t('scenes.movies.list_of_movies'), getMoviesMenu(movies));
-  await ctx.reply(ctx.i18n.t('scenes.movies.delete_unwanted_movies'), backKeyboard);
+  if (movies.length) {
+    await ctx.reply(ctx.i18n.t('scenes.movies.list_of_movies'), getMoviesMenu(movies));
+    await ctx.reply(ctx.i18n.t('scenes.movies.delete_unwanted_movies'), backKeyboard);
+  } else {
+    await ctx.reply(ctx.i18n.t('scenes.movies.no_movies_in_collection'), backKeyboard);
+  }
 });
 
 movies.leave(async (ctx: ContextMessageUpdate) => {
@@ -29,7 +33,7 @@ movies.leave(async (ctx: ContextMessageUpdate) => {
   await ctx.reply(ctx.i18n.t('shared.what_next'), mainKeyboard);
 });
 
-movies.command('cancel', leave());
+movies.command('saveme', leave());
 movies.hears(match('keyboards.back_keyboard.back'), leave());
 
 movies.action(/movie/, exposeMovie, movieAction);

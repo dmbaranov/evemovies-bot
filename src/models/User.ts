@@ -8,6 +8,7 @@ export interface IUser extends Document {
   observableMovies: IMovie[];
   lastActivity: string;
   language: 'en' | 'ru';
+  totalMovies: number;
 }
 
 export const UserSchema = new mongoose.Schema(
@@ -22,7 +23,8 @@ export const UserSchema = new mongoose.Schema(
       }
     ],
     lastActivity: String,
-    language: String
+    language: String,
+    totalMovies: Number
   },
   { _id: false }
 );

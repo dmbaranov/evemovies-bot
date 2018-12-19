@@ -23,7 +23,7 @@ searcher.leave(async (ctx: ContextMessageUpdate) => {
   await ctx.reply(ctx.i18n.t('shared.what_next'), mainKeyboard);
 });
 
-searcher.command('cancel', leave());
+searcher.command('saveme', leave());
 searcher.hears(match('keyboards.back_keyboard.back'), leave());
 
 searcher.on('text', async (ctx: ContextMessageUpdate, next: Function) => {

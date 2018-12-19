@@ -56,15 +56,21 @@ async function notifyAndUpdateUsers(movie: IMovie, language: string) {
 
   for (const user of usersToNotify) {
     logger.debug(undefined, 'Notifiying user %s about movie %s', user.username, movie.title);
+    // TODO: move text to translations
+    const message =
+      user.language === 'en'
+        ? `🎉 Movie ${movie.title} has been released!`
+        : `🎉 Фильм ${movie.title} вышел и доступен на торрентах!`;
 
     await sleep(0.5);
-    await telegram.sendMessage(user._id, `Movie ${movie.title} has been released!`);
+    await telegram.sendMessage(user._id, message);
     await User.findOneAndUpdate(
       {
         _id: user._id
       },
       {
-        $pull: { observableMovies: movie._id }
+        $pull: { observableMovies: movie._id },
+        $inc: { totalMovies: 1 }
       },
       {
         new: true

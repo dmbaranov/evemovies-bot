@@ -17,7 +17,6 @@ export const languageSettingsAction = async (ctx: ContextMessageUpdate) => {
 };
 
 export const languageChangeAction = async (ctx: ContextMessageUpdate) => {
-  logger.debug(ctx, 'Language was changed');
   const langData = JSON.parse(ctx.callbackQuery.data);
   await updateLanguage(ctx, langData.p);
   const keyboard = getMainKeyboard(ctx);
@@ -39,7 +38,8 @@ export const accountSummaryAction = async (ctx: ContextMessageUpdate) => {
   await ctx.editMessageText(
     ctx.i18n.t('scenes.settings.account_summary', {
       username: user.username,
-      id: user._id
+      id: user._id,
+      totalMovies: user.totalMovies
     }),
     keyboard
   );

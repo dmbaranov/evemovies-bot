@@ -2,44 +2,47 @@
   "scenes": {
     "start": {
       "welcome_back": "Glad to see you back! Now you can continue watching after the releases of your favorite movies! What do you want to do now?",
-      "new_account": "Account has been created successfully! Choose what you want to do next"
+      "new_account": "Account has been created successfully! Before start doing stuff with me, please read a short instruction about who I am and how I can help you 😊",
+      "bot_description": "<b>🔻 I'm currently in open beta test and under heavy development. Therefore, errors may occur. Do not hesitate to contact developer from under ⚙️ Settings section (will be there soon)\n\n</b>🔻 I will help you to track upcoming torrent movies. Use search, add them to your library and I'll write back to you once the movie released\n\n🔻 As for now, I can only search for movies, but soon there will be TV Shows search together with some other coll functionality\n\n🔻 You can tell me what to do using Telegram keyboard. To open it, press the icon at the right bottom corner\n\n🔻 If something is broken, write /saveme and I'll do my best to fix it\n\n🔻 More information can be found under ❓About section\n\n🔻 Hope you enjoy using me!",
+      "lets_go": "Let's go!"
     },
     "about": {
-      "main": "Hey! First of all, thanks for using this bot! Have you ever had a moments when you see a trailer of cool movie and give yourself a promise to watch it? Then it appears to be 2 or 3 months until the release of this movie and you simply forget about it.. I was in such situation quite a lot of time. That's why this bot exists. It works quite simply - you can search for a movie you would like to watch later and add it to your collection. After that bot will send you a message once you can watch this movie online. Easy? Of course! Easy and powerful!"
+      "main": "Hey! First of all, thanks for using this bot!\n\nHave you ever had a moments when you see a trailer of cool movie and give yourself a promise to watch it? Then it appears to be 2 or 3 months until the release of this movie and you simply forget about it..\n\nI was in such situation quite a lot of time. That's why this bot exists. It works quite simply - you can search for a movie you would like to watch later and add it to your collection. After that bot will send you a message once you can watch this movie online. Easy? Of course! Easy and powerful!"
     },
     "movies": {
       "chosen_movie": "You've chosen movie: ${title}",
       "list_of_movies": "This is list of your movies",
-      "back_button": "Back",
-      "delete_button": "Delete",
-      "delete_unwanted_movies": "You can delete movies you don't want to track anymore"
+      "back_button": "◀️ Back",
+      "delete_button": "❌ Delete",
+      "delete_unwanted_movies": "You can delete movies you don't want to track anymore",
+      "no_movies_in_collection": "🗑 You don't have any movies in your collection. Go add some!"
     },
     "search": {
       "chosen_movie": "You've chosen movie: ${title}",
-      "added_movie_to_lib": "Added ${title} to your lib! Continue search or /cancel to leave",
-      "list_of_found_movies": "Here's a list of movies that I found for you! Please, choose one or specify your request",
-      "continue_search": "${canAddResult} Continue search or /cancel to leave",
-      "back_button": "Back",
-      "add_button": "Add",
-      "reason_movie_released": "This movie has been already released.",
-      "reason_already_observing": "You're already observing this movie.",
-      "welcome_to_search": "Here you can search for movies! Just type the title in and hit enter. Use /cancel or inline keyboard to return",
-      "no_movies_found": "No movies were found... Try to specify your request or /cancel to stop searching"
+      "added_movie_to_lib": "✅ Added ${title} to your lib! Continue search or get back",
+      "list_of_found_movies": "🔎 Here's a list of movies that I found for you! Please, choose one or specify your request",
+      "continue_search": "${canAddResult} Continue search or get back",
+      "back_button": "◀️ Back",
+      "add_button": "➕ Add",
+      "reason_movie_released": "🔔 This movie has been already released.",
+      "reason_already_observing": "🚫You're already observing this movie.",
+      "welcome_to_search": "🚀 Activating search engine! Just type the title in and let's go!",
+      "no_movies_found": "🗑 No movies were found... Try to specify your request"
     },
     "settings": {
       "pick_language": "Pick language ❗️Movies will be tracked for the same language❗️",
       "language_changed": "Language has been changed!",
       "what_to_change": "What do you want to change?",
-      "account_summary": "Your account summary:\n\nUsername: ${username}\nID: ${id}",
+      "account_summary": "Your account summary:\n\nUsername: ${username}\nID: ${id}\nMovies notifications sent: ${totalMovies}",
       "language_button": "🗣 Language",
       "account_summary_button": "🔑 Account summary",
-      "back_button": "Back",
+      "back_button": "◀️ Back",
       "settings": "Settings"
     }
   },
   "shared": {
-    "what_next": "Hey, what are you up to?",
-    "something_went_wrong": "Something went wrong. Try one more time.."
+    "what_next": "✋ Hey, what are you up to?",
+    "something_went_wrong": "❌ Something went wrong. Try one more time.."
   },
   "keyboards": {
     "back_keyboard": {
@@ -51,5 +54,8 @@
       "settings": "⚙️ Settings",
       "about": "❓ About"
     }
+  },
+  "other": {
+    "movie_has_been_released": "🎉 Movie ${movie} has been released!"
   }
 }

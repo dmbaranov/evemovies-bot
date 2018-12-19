@@ -11,8 +11,10 @@ export const getUserInfo = async (ctx: ContextMessageUpdate, next: Function) => 
   if (!ctx.userInfo.language) {
     const user = await User.findById(ctx.from.id);
 
-    ctx.userInfo.language = user.language;
-    ctx.i18n.locale(user.language);
+    if (user) {
+      ctx.userInfo.language = user.language;
+      ctx.i18n.locale(user.language);
+    }
   }
 
   return next();
