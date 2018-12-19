@@ -11,6 +11,7 @@ const { leave } = Stage;
 const start = new Scene('start');
 
 start.enter(async (ctx: ContextMessageUpdate) => {
+  (ctx as any).webhookReply = false;
   const uid = String(ctx.from.id);
   const user = await User.findById(uid);
   const { mainKeyboard } = getMainKeyboard(ctx);

@@ -4,6 +4,7 @@ import { sleep } from '../../util/common';
 import { updateLanguage } from '../../util/language';
 
 export const languageChangeAction = async (ctx: ContextMessageUpdate) => {
+  (ctx as any).webhookReply = false;
   const langData = JSON.parse(ctx.callbackQuery.data);
   await updateLanguage(ctx, langData.p);
   const accountConfirmKeyboard = getAccountConfirmKeyboard(ctx);

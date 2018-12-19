@@ -21,7 +21,7 @@ import { updateUserTimestamp } from './middlewares/update-user-timestamp';
 import { getUserInfo } from './middlewares/user-info';
 
 mongoose.connect(
-  `mongodb://localhost:27017/torrent-bot`,
+  `mongodb://localhost:27017/${process.env.DATABASE_HOST}`,
   { useNewUrlParser: true, useFindAndModify: false }
 );
 mongoose.connection.on('error', err => {
@@ -115,6 +115,6 @@ async function startProdMode(bot: Telegraf<ContextMessageUpdate>) {
     source: 'cert.pem'
   });
 
-  bot.startWebhook(`/${process.env.TELEGRAM_TOKEN}`, tlsOptions, 8443);
+  bot.startWebhook(`/${process.env.TELEGRAM_TOKEN}`, tlsOptions, +process.env.WEBHOOK_PORT);
   checkUnreleasedMovies();
 }
