@@ -9,11 +9,11 @@ interface ICheckerConfig {
 }
 
 /**
- * Returns true of movie has been released, false otherwise
- * @param imdbid - movie id from imdb
+ * Returns true if movie has been released, false otherwise
+ * @param config - config to check the movie
  */
 async function checkMovieRelease(config: ICheckerConfig): Promise<Boolean> {
-  logger.debug(undefined, 'Checking release for movie %s', config.imdbid);
+  logger.debug(undefined, 'Checking international release for movie %s', config.imdbid);
 
   const url = `http://api.apiumando.info/movie?cb=&quality=720p,1080p,3d&page=1&imdb=${
     config.imdbid
@@ -31,6 +31,10 @@ async function checkMovieRelease(config: ICheckerConfig): Promise<Boolean> {
   return torrents.items && torrents.items.length > 0;
 }
 
+/**
+ * Returns true if movie has been released, false otherwise
+ * @param config - config to check the movie
+ */
 async function checkRussianMovieRelease(config: ICheckerConfig) {
   logger.debug(undefined, 'Checking russian release for movie %s', config.title);
 

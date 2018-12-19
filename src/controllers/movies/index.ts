@@ -2,17 +2,19 @@ import { ContextMessageUpdate } from 'telegraf';
 import { match } from 'telegraf-i18n';
 import Stage from 'telegraf/stage';
 import Scene from 'telegraf/scenes/base';
-import User from '../../models/User';
-import { saveToSession, deleteFromSession } from '../../util/session';
-import { getMainKeyboard, getBackKeyboard } from '../../util/keyboards';
 import { getMoviesMenu } from './helpers';
 import { exposeMovie } from './middlewares';
 import { movieAction, backAction, deleteAction } from './actions';
+import User from '../../models/User';
+import { saveToSession, deleteFromSession } from '../../util/session';
+import { getMainKeyboard, getBackKeyboard } from '../../util/keyboards';
+import logger from '../../util/logger';
 
 const { leave } = Stage;
 const movies = new Scene('movies');
 
 movies.enter(async (ctx: ContextMessageUpdate) => {
+  logger.debug(ctx, 'Enters movies scene');
   const { backKeyboard } = getBackKeyboard(ctx);
   const user = await User.findById(ctx.from.id);
   const movies = user.observableMovies;
@@ -27,6 +29,7 @@ movies.enter(async (ctx: ContextMessageUpdate) => {
 });
 
 movies.leave(async (ctx: ContextMessageUpdate) => {
+  logger.debug(ctx, 'Leaves movies scene');
   const { mainKeyboard } = getMainKeyboard(ctx);
   deleteFromSession(ctx, 'movies');
 

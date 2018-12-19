@@ -18,7 +18,7 @@ export async function getMovieList(ctx: ContextMessageUpdate): Promise<SearchRes
 
   try {
     logger.debug(ctx, 'Searching for movie %s', ctx.message.text);
-    movies = await movieSearch[ctx.userInfo.language]({ name: ctx.message.text });
+    movies = await movieSearch[ctx.userInfo.language](ctx, { name: ctx.message.text });
     saveToSession(ctx, 'movies', movies);
 
     return movies;
@@ -115,6 +115,7 @@ export async function addMovieForUser(ctx: ContextMessageUpdate) {
  * @param movie - single movie
  */
 export async function canAddMovie(ctx: ContextMessageUpdate) {
+  logger.debug(ctx, 'Checks if can add a movie');
   const movieRelease = await releaseChecker[ctx.userInfo.language]({
     imdbid: ctx.movie.imdbid,
     title: ctx.movie.title,

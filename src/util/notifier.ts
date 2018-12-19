@@ -12,6 +12,8 @@ type lang = 'en' | 'ru';
  * Takes all unreleased movies, checks each it it has been released and notifies users who observe this movie.
  */
 export async function checkUnreleasedMovies() {
+  logger.debug(undefined, 'Starting to check unreleased movies');
+
   const unreleasedMovies = await Movie.find({
     'unreleasedLanguages.0': { $exists: true }
   });

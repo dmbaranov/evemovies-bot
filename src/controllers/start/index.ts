@@ -20,7 +20,6 @@ start.enter(async (ctx: ContextMessageUpdate) => {
   } else {
     logger.debug(ctx, 'New user has been created');
 
-    const languageKeyboard = getLanguageKeyboard();
     const newUser = new User({
       _id: uid,
       username: ctx.from.username,
@@ -31,7 +30,7 @@ start.enter(async (ctx: ContextMessageUpdate) => {
     });
 
     await newUser.save();
-    await ctx.reply('Choose language / Выбери язык', languageKeyboard);
+    await ctx.reply('Choose language / Выбери язык', getLanguageKeyboard());
   }
 });
 

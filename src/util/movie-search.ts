@@ -1,3 +1,4 @@
+import { ContextMessageUpdate } from 'telegraf';
 import * as imdb from 'imdb-api';
 import { SearchRequest, SearchResult, RequestType } from 'imdb-api';
 import * as rp from 'request-promise';
@@ -12,20 +13,32 @@ const IMDB_SEARCH_PARAMS = {
  * Returns list of movies from the imdb API
  * @param opts - search parameters
  */
-async function imdbSearch(opts: SearchRequest): Promise<SearchResult[]> {
+async function imdbSearch(ctx: ContextMessageUpdate, opts: SearchRequest): Promise<SearchResult[]> {
   let result;
 
   try {
     result = await imdb.search(opts, IMDB_SEARCH_PARAMS);
+    logger.debug(
+      ctx,
+      'Searching for an IMDB movie with the parameters %s, amount of results %d',
+      opts,
+      result.results.length
+    );
+
     return result.results;
   } catch (e) {
     logger.error(undefined, 'Error occured during imdb searching for movie %O. %O', opts, e);
   }
 }
 
-async function filmopotokSearch(opts: SearchRequest): Promise<SearchResult[]> {
-  logger.debug(undefined, 'Checking russian release for movie %s', opts.name);
-
+/**
+ * Returns list of movies from the filmopotok
+ * @param opts - search parameters
+ */
+async function filmopotokSearch(
+  ctx: ContextMessageUpdate,
+  opts: SearchRequest
+): Promise<SearchResult[]> {
   const url = encodeURI(`http://filmpotok.ru/search/autocomplete/all/${opts.name}`);
   let response;
 
@@ -36,7 +49,7 @@ async function filmopotokSearch(opts: SearchRequest): Promise<SearchResult[]> {
   }
 
   const torrents = JSON.parse(response)[1];
-  return Object.values(torrents)
+  const result = Object.values(torrents)
     .filter((item: any) => item.href.startsWith('/film'))
     .map((item: any) => ({
       title: item.value,
@@ -46,6 +59,14 @@ async function filmopotokSearch(opts: SearchRequest): Promise<SearchResult[]> {
       type: undefined,
       poster: undefined
     }));
+
+  logger.debug(
+    ctx,
+    'Searching for an filmopotok movie with the parameters %s, amount of results %d',
+    opts,
+    result.length
+  );
+  return result;
 }
 
 export const movieSearch = {

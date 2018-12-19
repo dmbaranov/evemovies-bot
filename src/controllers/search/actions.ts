@@ -26,7 +26,7 @@ export const addMovieAction = async (ctx: ContextMessageUpdate) => {
   if (typeof canAddResult === 'string') {
     await ctx.editMessageText(ctx.i18n.t('scenes.search.continue_search', { canAddResult }));
   } else {
-    logger.debug(ctx, 'User is addings movie %O to this collection', ctx.movie);
+    logger.debug(ctx, 'User is adding movie %O to this collection', ctx.movie);
 
     await addMovieForUser(ctx);
     await ctx.editMessageText(
