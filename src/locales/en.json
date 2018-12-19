@@ -3,11 +3,11 @@
     "start": {
       "welcome_back": "Glad to see you back! Now you can continue watching after the releases of your favorite movies! What do you want to do now?",
       "new_account": "Account has been created successfully! Before start doing stuff with me, please read a short instruction about who I am and how I can help you 😊",
-      "bot_description": "<b>🔻 I'm currently in open beta test and under heavy development. Therefore, errors may occur. Do not hesitate to contact developer from under ⚙️ Settings section (will be there soon)\n\n</b>🔻 I will help you to track upcoming torrent movies. Use search, add them to your library and I'll write back to you once the movie released\n\n🔻 As for now, I can only search for movies, but soon there will be TV Shows search together with some other coll functionality\n\n🔻 You can tell me what to do using Telegram keyboard. To open it, press the icon at the right bottom corner\n\n🔻 If something is broken, write /saveme and I'll do my best to fix it\n\n🔻 More information can be found under ❓About section\n\n🔻 Hope you enjoy using me!",
+      "bot_description": "<b>🔻 I'm currently in open beta test and under heavy development. Therefore, errors may occur. Do not hesitate to contact developer from under ⚙️ Settings section (will be there soon)\n\n</b>🔻 My name is Eve and I will help you to track upcoming torrent movies. Use search, add them to your library and I'll write back to you once the movie released\n\n🔻 As for now, I can only search for movies, but soon there will be TV Shows search together with some other coll functionality\n\n🔻 You can tell me what to do using Telegram keyboard. To open it, press the icon at the right bottom corner\n\n🔻 If something is broken, write /saveme and I'll do my best to fix it\n\n🔻 More information can be found under ❓About section\n\n🔻 Hope you enjoy using me!",
       "lets_go": "Let's go!"
     },
     "about": {
-      "main": "Hey! First of all, thanks for using this bot!\n\nHave you ever had a moments when you see a trailer of cool movie and give yourself a promise to watch it? Then it appears to be 2 or 3 months until the release of this movie and you simply forget about it..\n\nI was in such situation quite a lot of time. That's why this bot exists. It works quite simply - you can search for a movie you would like to watch later and add it to your collection. After that bot will send you a message once you can watch this movie online. Easy? Of course! Easy and powerful!"
+      "main": "Hey! First of all, thanks for activating me!\n\nHave you ever had a moments when you see a trailer of cool movie and give yourself a promise to watch it? Then it appears to be 2 or 3 months until the release of this movie and you simply forget about it..\n\nMy author was in such situation quite a lot of time. And that's exactly why he created me. My name is Eve and I help him to track any movies he wants - as soon as they're available on torrents, I'm sending him a message about it and he never forgets to watch them anymore. I can help you with it as well! Just go search for a movie and add it to your library and I'll write you back once you can watch it!"
     },
     "movies": {
       "chosen_movie": "You've chosen movie: ${title}",
@@ -19,7 +19,7 @@
     },
     "search": {
       "chosen_movie": "You've chosen movie: ${title}",
-      "added_movie_to_lib": "✅ Added ${title} to your lib! Continue search or get back",
+      "added_movie_to_lib": "✅ I added ${title} to your lib! Continue search or get back",
       "list_of_found_movies": "🔎 Here's a list of movies that I found for you! Please, choose one or specify your request",
       "continue_search": "${canAddResult} Continue search or get back",
       "back_button": "◀️ Back",
