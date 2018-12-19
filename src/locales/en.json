@@ -57,6 +57,6 @@
   },
   "other": {
     "movie_has_been_released": "🎉 Movie ${movie} has been released!",
-    "there_was_an_update": "♻️ There was an update and I had to refresh myself. What are you up to?"
+    "default_handler": "🚧 Hey, please choose a section with the Telegram keyboard before typing anything"
   }
 }

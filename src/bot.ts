@@ -90,11 +90,12 @@ mongoose.connection.on('open', () => {
   );
 
   bot.hears(/(.*?)/, async (ctx: ContextMessageUpdate) => {
+    logger.debug(ctx, 'Default handler has fired');
     const user = await User.findById(ctx.from.id);
     await updateLanguage(ctx, user.language);
 
     const { mainKeyboard } = getMainKeyboard(ctx);
-    await ctx.reply(ctx.i18n.t('other.there_was_an_update'), mainKeyboard);
+    await ctx.reply(ctx.i18n.t('other.default_handler'), mainKeyboard);
   });
 
   bot.catch((error: any) => {
