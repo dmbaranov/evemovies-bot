@@ -11,7 +11,6 @@ const { leave } = Stage;
 const start = new Scene('start');
 
 start.enter(async (ctx: ContextMessageUpdate) => {
-  (ctx as any).webhookReply = false;
   const uid = String(ctx.from.id);
   const user = await User.findById(uid);
   const { mainKeyboard } = getMainKeyboard(ctx);
@@ -33,6 +32,7 @@ start.enter(async (ctx: ContextMessageUpdate) => {
 
     await newUser.save();
     await ctx.reply('Choose language / Выбери язык', languageKeyboard);
+    await ctx.answerCbQuery();
   }
 });
 
