@@ -20,7 +20,7 @@ async function imdbSearch(ctx: ContextMessageUpdate, opts: SearchRequest): Promi
     result = await imdb.search(opts, IMDB_SEARCH_PARAMS);
     logger.debug(
       ctx,
-      'Searching for an IMDB movie with the parameters %s, amount of results %d',
+      'Searching for an IMDB movie with the parameters %O, amount of results %d',
       opts,
       result.results.length
     );
@@ -62,7 +62,7 @@ async function filmopotokSearch(
 
   logger.debug(
     ctx,
-    'Searching for an filmopotok movie with the parameters %s, amount of results %d',
+    'Searching for a filmopotok movie with the parameters %O, amount of results %d',
     opts,
     result.length
   );

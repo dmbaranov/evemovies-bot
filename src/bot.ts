@@ -8,6 +8,7 @@ import Stage from 'telegraf/stage';
 import session from 'telegraf/session';
 import mongoose from 'mongoose';
 import rp from 'request-promise';
+import User from './models/User';
 import logger from './util/logger';
 import about from './controllers/about';
 import startScene from './controllers/start';
@@ -17,6 +18,7 @@ import settingsScene from './controllers/settings';
 import { checkUnreleasedMovies } from './util/notifier';
 import asyncWrapper from './util/error-handler';
 import { getMainKeyboard } from './util/keyboards';
+import { updateLanguage } from './util/language';
 import { updateUserTimestamp } from './middlewares/update-user-timestamp';
 import { getUserInfo } from './middlewares/user-info';
 
@@ -86,6 +88,14 @@ mongoose.connection.on('open', () => {
       await ctx.reply(ctx.i18n.t('shared.what_next'), mainKeyboard);
     })
   );
+
+  bot.hears(/(.*?)/, async (ctx: ContextMessageUpdate) => {
+    const user = await User.findById(ctx.from.id);
+    await updateLanguage(ctx, user.language);
+
+    const { mainKeyboard } = getMainKeyboard(ctx);
+    await ctx.reply(ctx.i18n.t('other.there_was_an_update'), mainKeyboard);
+  });
 
   bot.catch((error: any) => {
     logger.error(undefined, 'Global error has happened, %O', error);

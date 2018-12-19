@@ -34,7 +34,7 @@ searcher.on('text', async (ctx: ContextMessageUpdate, next: Function) => {
 
   if (!movies || !movies.length) {
     await ctx.reply(ctx.i18n.t('scenes.search.no_movies_found'));
-    return next();
+    return;
   }
 
   await ctx.reply(ctx.i18n.t('scenes.search.list_of_found_movies'), getMoviesMenu(movies));
