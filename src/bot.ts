@@ -118,13 +118,16 @@ function startDevMode(bot: Telegraf<ContextMessageUpdate>) {
 async function startProdMode(bot: Telegraf<ContextMessageUpdate>) {
   logger.debug(undefined, 'Starting a bot in production mode');
   const tlsOptions = {
-    key: fs.readFileSync('/etc/letsencrypt/live/dmbaranov.io/privkey.pem'),
-    cert: fs.readFileSync('/etc/letsencrypt/live/dmbaranov.io/fullchain.pem')
+    key: fs.readFileSync(process.env.PATH_TO_KEY),
+    cert: fs.readFileSync(process.env.PATH_TO_CERT)
   };
 
-  await bot.telegram.setWebhook(`https://dmbaranov.io:8443/${process.env.TELEGRAM_TOKEN}`, {
-    source: 'cert.pem'
-  });
+  await bot.telegram.setWebhook(
+    `https://dmbaranov.io:${process.env.WEBHOOK_PORT}/${process.env.TELEGRAM_TOKEN}`,
+    {
+      source: 'cert.pem'
+    }
+  );
 
   bot.startWebhook(`/${process.env.TELEGRAM_TOKEN}`, tlsOptions, +process.env.WEBHOOK_PORT);
   checkUnreleasedMovies();
