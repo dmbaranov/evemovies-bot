@@ -15,6 +15,12 @@ const IMDB_SEARCH_PARAMS = {
  */
 async function imdbSearch(ctx: ContextMessageUpdate, opts: SearchRequest): Promise<SearchResult[]> {
   let result;
+  const parsedYear = opts.name.match(/\[[1,2][0-9]{3}\]$/g);
+
+  if (parsedYear) {
+    opts.year = +parsedYear[0].substr(1, 4);
+    opts.name = opts.name.slice(0, -7);
+  }
 
   try {
     result = await imdb.search(opts, IMDB_SEARCH_PARAMS);
