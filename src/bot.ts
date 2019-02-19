@@ -15,6 +15,7 @@ import startScene from './controllers/start';
 import searchScene from './controllers/search';
 import moviesScene from './controllers/movies';
 import settingsScene from './controllers/settings';
+import contactScene from './controllers/contact';
 import { checkUnreleasedMovies } from './util/notifier';
 import asyncWrapper from './util/error-handler';
 import { getMainKeyboard } from './util/keyboards';
@@ -37,7 +38,7 @@ mongoose.connection.on('error', err => {
 
 mongoose.connection.on('open', () => {
   const bot = new Telegraf(process.env.TELEGRAM_TOKEN);
-  const stage = new Stage([startScene, searchScene, moviesScene, settingsScene]);
+  const stage = new Stage([startScene, searchScene, moviesScene, settingsScene, contactScene]);
   const i18n = new TelegrafI18n({
     defaultLanguage: 'en',
     directory: path.resolve(__dirname, 'locales'),
@@ -78,6 +79,11 @@ mongoose.connection.on('open', () => {
     asyncWrapper(async (ctx: ContextMessageUpdate) => await ctx.scene.enter('settings'))
   );
   bot.hears(match('keyboards.main_keyboard.about'), updateUserTimestamp, asyncWrapper(about));
+  bot.hears(
+    match('keyboards.main_keyboard.contact'),
+    updateUserTimestamp,
+    asyncWrapper(async (ctx: ContextMessageUpdate) => await ctx.scene.enter('contact'))
+  );
   bot.hears(
     match('keyboards.back_keyboard.back'),
     asyncWrapper(async (ctx: ContextMessageUpdate) => {

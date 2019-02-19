@@ -25,9 +25,11 @@ export const getMainKeyboard = (ctx: ContextMessageUpdate) => {
   const mainKeyboardMyCollection = ctx.i18n.t('keyboards.main_keyboard.movies');
   const mainKeyboardSettings = ctx.i18n.t('keyboards.main_keyboard.settings');
   const mainKeyboardAbout = ctx.i18n.t('keyboards.main_keyboard.about');
+  const mainKeyboardContact = ctx.i18n.t('keyboards.main_keyboard.contact');
   let mainKeyboard: any = Markup.keyboard([
     [mainKeyboardSearchMovies, mainKeyboardMyCollection] as any,
-    [mainKeyboardSettings, mainKeyboardAbout]
+    [mainKeyboardSettings, mainKeyboardAbout],
+    [mainKeyboardContact]
   ]);
   mainKeyboard = mainKeyboard.resize().extra();
 
