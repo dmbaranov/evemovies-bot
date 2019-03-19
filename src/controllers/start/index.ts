@@ -19,13 +19,15 @@ start.enter(async (ctx: ContextMessageUpdate) => {
     await ctx.reply(ctx.i18n.t('scenes.start.welcome_back'), mainKeyboard);
   } else {
     logger.debug(ctx, 'New user has been created');
+    const now = new Date().getTime();
 
     const newUser = new User({
       _id: uid,
+      created: now,
       username: ctx.from.username,
       name: ctx.from.first_name + ' ' + ctx.from.last_name,
       observableMovies: [],
-      lastActivity: new Date(),
+      lastActivity: now,
       totalMovies: 0
     });
 

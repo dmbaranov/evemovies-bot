@@ -7,6 +7,10 @@ import User from '../models/User';
  * @param next - next function
  */
 export const updateUserTimestamp = async (ctx: ContextMessageUpdate, next: Function) => {
-  await User.findOneAndUpdate({ _id: ctx.from.id }, { lastActivity: new Date() }, { new: true });
+  await User.findOneAndUpdate(
+    { _id: ctx.from.id },
+    { lastActivity: new Date().getTime() },
+    { new: true }
+  );
   return next();
 };

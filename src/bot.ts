@@ -2,7 +2,7 @@ require('dotenv').config();
 require('./models');
 import fs from 'fs';
 import path from 'path';
-import Telegraf, { ContextMessageUpdate } from 'telegraf';
+import Telegraf, { ContextMessageUpdate, Extra, Markup } from 'telegraf';
 import TelegrafI18n, { match } from 'telegraf-i18n';
 import Stage from 'telegraf/stage';
 import session from 'telegraf/session';
@@ -100,6 +100,27 @@ mongoose.connection.on('open', () => {
       const { mainKeyboard } = getMainKeyboard(ctx);
 
       await ctx.reply(ctx.i18n.t('shared.what_next'), mainKeyboard);
+    })
+  );
+
+  bot.hears(
+    match('keyboards.main_keyboard.support'),
+    asyncWrapper(async (ctx: ContextMessageUpdate) => {
+      logger.debug(ctx, 'Opened support options');
+
+      const supportKeyboard = Extra.HTML().markup((m: Markup) =>
+        m.inlineKeyboard(
+          [
+            [m.urlButton(`Patreon`, process.env.PATREON_LINK, false)],
+            [m.urlButton(`Paypal`, process.env.PAYPAL_LINK, false)],
+            [m.urlButton(`Yandex.Money`, process.env.YANDEX_LINK, false)],
+            [m.urlButton(`WebMoney`, process.env.WEBMONEY_LINK, false)]
+          ] as any,
+          {}
+        )
+      );
+
+      await ctx.reply(ctx.i18n.t('other.support'), supportKeyboard);
     })
   );
 

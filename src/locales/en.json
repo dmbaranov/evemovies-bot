@@ -3,7 +3,7 @@
     "start": {
       "welcome_back": "Glad to see you back! Now you can continue watching after the releases of your favorite movies! What do you want to do now?",
       "new_account": "Account has been created successfully! Before start doing stuff with me, please read a short instruction about who I am and how I can help you 😊",
-      "bot_description": "<b>🔻 I'm currently in open beta test and under heavy development. Therefore, errors may occur. Do not hesitate to contact the Creator from under ✍️ Contact section\n\n</b>🔻 My name is Eve and I will help you to track upcoming torrent movies. Use search, add them to your collection and I'll write back to you once the movie released in a good quality\n\n🔻 As for now, I can only search for movies, but soon there will be TV Shows search together with some other coll functionality\n\n🔻 You can tell me what to do using Telegram keyboard. To open it, press the icon at the right bottom corner\n\n🔻 You can specify movie's year to get more relevant results. Use square brackets, for instance: star wars [2003]\n\n🔻 If something is broken, write /saveme and I'll do my best to fix it\n\n🔻 More information can be found under ❓About section\n\n🔻 Hope you enjoy using me!\n\nP.S. I'm also open source now! You can check me out here: https://github.com/dmbaranov/evemovies-bot",
+      "bot_description": "<b>🔻 I'm currently in open beta test and under heavy development. Therefore, errors may occur. Do not hesitate to contact the Creator from under ✍️ Contact section\n\n</b>🔻 My name is Eve and I will help you to track upcoming torrent movies. Use search, add them to your collection and I'll write back to you once the movie released in a good quality\n\n🔻 As for now, I can only search for movies, but soon there will be TV Shows search together with some other cool functionality\n\n🔻 You can tell me what to do using Telegram keyboard. To open it, press the icon at the right bottom corner\n\n🔻 You can specify movie's year to get more relevant results. Use square brackets, for instance: star wars [2003]\n\n🔻 If something is broken, write /saveme and I'll do my best to fix it\n\n🔻 More information can be found under ❓About section\n\n🔻 Hope you enjoy using me!\n\nP.S. I'm also open source now! You can check me out here: https://github.com/dmbaranov/evemovies-bot",
       "lets_go": "Let's go!"
     },
     "about": {
@@ -57,11 +57,13 @@
       "movies": "🎥 My collection",
       "settings": "⚙️ Settings",
       "about": "❓ About",
+      "support": "💰 Donation",
       "contact": "✍️ Contact"
     }
   },
   "other": {
     "movie_has_been_released": "🎉 Movie ${movie} has been released!",
-    "default_handler": "🚧 Hey, please choose a section with the Telegram keyboard before typing anything"
+    "default_handler": "🚧 Hey, please choose a section with the Telegram keyboard before typing anything",
+    "support": "🤝 If you like everything and want to say thanks me and the Creator, you can do it using these options:"
   }
 }
