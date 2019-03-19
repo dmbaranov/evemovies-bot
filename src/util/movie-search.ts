@@ -78,4 +78,4 @@ async function filmopotokSearch(
 export const movieSearch = {
   en: imdbSearch,
   ru: filmopotokSearch
-};
+} as any;

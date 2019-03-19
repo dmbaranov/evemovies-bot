@@ -98,4 +98,4 @@ async function checkRussianMovieRelease(config: ICheckerConfig) {
 export const releaseChecker = {
   en: checkMovieRelease,
   ru: checkRussianMovieRelease
-};
+} as any;

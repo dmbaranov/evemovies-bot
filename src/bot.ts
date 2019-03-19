@@ -16,16 +16,21 @@ import searchScene from './controllers/search';
 import moviesScene from './controllers/movies';
 import settingsScene from './controllers/settings';
 import contactScene from './controllers/contact';
+import adminScene from './controllers/admin';
 import { checkUnreleasedMovies } from './util/notifier';
 import asyncWrapper from './util/error-handler';
 import { getMainKeyboard } from './util/keyboards';
 import { updateLanguage } from './util/language';
 import { updateUserTimestamp } from './middlewares/update-user-timestamp';
 import { getUserInfo } from './middlewares/user-info';
+import { isAdmin } from './middlewares/is-admin';
 
 mongoose.connect(
   `mongodb://localhost:27017/${process.env.DATABASE_HOST}`,
-  { useNewUrlParser: true, useFindAndModify: false }
+  {
+    useNewUrlParser: true,
+    useFindAndModify: false
+  }
 );
 mongoose.connection.on('error', err => {
   logger.error(
@@ -38,7 +43,14 @@ mongoose.connection.on('error', err => {
 
 mongoose.connection.on('open', () => {
   const bot = new Telegraf(process.env.TELEGRAM_TOKEN);
-  const stage = new Stage([startScene, searchScene, moviesScene, settingsScene, contactScene]);
+  const stage = new Stage([
+    startScene,
+    searchScene,
+    moviesScene,
+    settingsScene,
+    contactScene,
+    adminScene
+  ]);
   const i18n = new TelegrafI18n({
     defaultLanguage: 'en',
     directory: path.resolve(__dirname, 'locales'),
@@ -46,10 +58,6 @@ mongoose.connection.on('open', () => {
     allowMissing: false,
     sessionName: 'session'
   });
-
-  bot.context.userInfo = {
-    language: undefined
-  };
 
   bot.use(session());
   bot.use(i18n.middleware());
@@ -93,6 +101,12 @@ mongoose.connection.on('open', () => {
 
       await ctx.reply(ctx.i18n.t('shared.what_next'), mainKeyboard);
     })
+  );
+
+  bot.hears(
+    /(.*admin)/,
+    isAdmin,
+    asyncWrapper(async (ctx: ContextMessageUpdate) => await ctx.scene.enter('admin'))
   );
 
   bot.hears(/(.*?)/, async (ctx: ContextMessageUpdate) => {

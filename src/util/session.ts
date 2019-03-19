@@ -1,7 +1,7 @@
 import { ContextMessageUpdate } from 'telegraf';
 import logger from './logger';
 
-type SessionDataField = 'movies' | 'settingsScene';
+type SessionDataField = 'movies' | 'settingsScene' | 'language';
 
 /**
  * Saving data to the session

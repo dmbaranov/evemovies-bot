@@ -18,7 +18,7 @@ export async function getMovieList(ctx: ContextMessageUpdate): Promise<SearchRes
 
   try {
     logger.debug(ctx, 'Searching for movie %s', ctx.message.text);
-    movies = await movieSearch[ctx.userInfo.language](ctx, { name: ctx.message.text });
+    movies = await movieSearch[ctx.session.language](ctx, { name: ctx.message.text });
     saveToSession(ctx, 'movies', movies);
 
     return movies;
@@ -86,7 +86,7 @@ export async function addMovieForUser(ctx: ContextMessageUpdate) {
       title: movie.title.replace(/ё/, 'e'),
       year: movie.year,
       released: false,
-      $addToSet: { unreleasedLanguages: ctx.userInfo.language }
+      $addToSet: { unreleasedLanguages: ctx.session.language }
     },
     {
       new: true,
@@ -116,7 +116,7 @@ export async function addMovieForUser(ctx: ContextMessageUpdate) {
  */
 export async function canAddMovie(ctx: ContextMessageUpdate) {
   logger.debug(ctx, 'Checks if can add a movie');
-  const movieRelease = await releaseChecker[ctx.userInfo.language]({
+  const movieRelease = await releaseChecker[ctx.session.language]({
     imdbid: ctx.movie.imdbid,
     title: ctx.movie.title,
     year: ctx.movie.year
