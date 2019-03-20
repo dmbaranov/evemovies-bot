@@ -12,6 +12,12 @@ How many times has it happened to you that you wanted to watch a movie once it's
 
 To start using Eve, simply add her in [Telegram](http://t.me/evemovies_bot) and press /start! It's easy, you'll see yourself!
 
+## Materials
+
+[ru] Подробнее познакомиться с процессом разработки Eve можно в статье, опубликованной на [Хабре](https://habr.com/ru/post/443876/)
+
+[en] WIP
+
 ## Contribution
 
 Eve is happy to receive any feedback you have! Feel free to create an issue here. Or, if you're a developer, I'd really be happy to get some PRs from you :)
