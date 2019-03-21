@@ -4,7 +4,7 @@ import Scene from 'telegraf/scenes/base';
 import { match } from 'telegraf-i18n';
 import { getMainKeyboard, getBackKeyboard } from '../../util/keyboards';
 import logger from '../../util/logger';
-import telegram from '../../telegram';
+import { write, getStats, getHelp } from './helpers';
 
 const { leave } = Stage;
 const admin = new Scene('admin');
@@ -26,14 +26,21 @@ admin.leave(async (ctx: ContextMessageUpdate) => {
 admin.command('saveme', leave());
 admin.hears(match('keyboards.back_keyboard.back'), leave());
 
-admin.on('text', async (ctx: ContextMessageUpdate, next: Function) => {
-  const [id, message] = ctx.message.text.split(' | ');
+admin.on('text', async (ctx: ContextMessageUpdate) => {
+  const [type, ...params] = ctx.message.text.split(' | ');
 
-  if (!Number.isNaN(+id) && id.length >= 8) {
-    try {
-      await telegram.sendMessage(Number(id), message);
-      await ctx.reply(`Successfully sent message to: ${id}, content: ${message}`);
-    } catch (e) {}
+  switch (type) {
+    case 'write':
+      await write(ctx, params[0], params[1]);
+      break;
+    case 'stats':
+      await getStats(ctx);
+      break;
+    case 'help':
+      await getHelp(ctx);
+      break;
+    default:
+      ctx.reply('Command was not specified');
   }
 });
 
