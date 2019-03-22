@@ -6,7 +6,9 @@ import { ContextMessageUpdate } from 'telegraf';
  * @param next - next function
  */
 export const isAdmin = async (ctx: ContextMessageUpdate, next: Function) => {
-  if (ctx.from.id === +process.env.ADMIN_ID) {
+  const password = ctx.message.text.split(' ')[1];
+
+  if (ctx.from.id === +process.env.ADMIN_ID && password === process.env.ADMIN_PASSWORD) {
     return next();
   }
 
