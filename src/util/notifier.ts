@@ -65,18 +65,25 @@ async function notifyAndUpdateUsers(movie: IMovie, language: string) {
         : `🎉 Фильм ${movie.title} вышел и доступен на торрентах!`;
 
     await sleep(0.5);
-    await telegram.sendMessage(user._id, message);
-    await User.findOneAndUpdate(
-      {
-        _id: user._id
-      },
-      {
-        $pull: { observableMovies: movie._id },
-        $inc: { totalMovies: 1 }
-      },
-      {
-        new: true
-      }
-    );
+
+    try {
+      await telegram.sendMessage(user._id, message);
+    } catch (e) {
+      logger.error(undefined, "Can't notify user about released movie, reason: %O", e);
+    } finally {
+      // TODO: check if user blocked the bot and delete him from the DB
+      await User.findOneAndUpdate(
+        {
+          _id: user._id
+        },
+        {
+          $pull: { observableMovies: movie._id },
+          $inc: { totalMovies: 1 }
+        },
+        {
+          new: true
+        }
+      );
+    }
   }
 }
