@@ -31,10 +31,13 @@ export async function scarabeyReleaseChecker(config: ICheckerConfig): Promise<Bo
     }
 
     try {
+      const configTitle = config.title.replace(/ё/, 'е');
       const movieTitle = $(elem)
         .find('.archive-note3 a')
         .html()
         .replace(/ё/, 'е')
+        .replace(/(\(.*rip.*\))/g, '')
+        .split('/')[0]
         .trim()
         .toLocaleLowerCase();
 
@@ -43,7 +46,7 @@ export async function scarabeyReleaseChecker(config: ICheckerConfig): Promise<Bo
         .text();
 
       if (
-        checkStringSimiliarity(movieTitle, config.title) &&
+        checkStringSimiliarity(movieTitle, configTitle) &&
         isNumberInRage(+config.year, +movieYear)
       ) {
         released = true;

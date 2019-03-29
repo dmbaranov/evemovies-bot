@@ -30,8 +30,6 @@ export function checkStringSimiliarity(a: string, b: string) {
   const second = b.toLocaleLowerCase();
 
   if (first === second) return true;
-  if (first.includes(second)) return true;
-  if (compareTwoStrings(first, second) >= 0.8) return true;
 
-  return false;
+  return compareTwoStrings(first, second) >= 0.75;
 }
