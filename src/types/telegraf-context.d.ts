@@ -5,7 +5,11 @@ declare module 'telegraf' {
   interface ContextMessageUpdate {
     i18n: I18n;
     scene: any;
-    session: any;
+    session: {
+      movies: any;
+      settingsScene: any;
+      language: any;
+    };
     movie: any;
   }
 }
