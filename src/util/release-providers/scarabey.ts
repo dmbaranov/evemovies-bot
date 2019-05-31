@@ -36,7 +36,7 @@ export async function scarabeyReleaseChecker(config: ICheckerConfig): Promise<Bo
         .find('.archive-note3 a')
         .html()
         .replace(/ё/, 'е')
-        .replace(/(\(.*rip.*\))/g, '')
+        .replace(/(\(.*rip.*\))/gi, '')
         .split('/')[0]
         .trim()
         .toLocaleLowerCase();

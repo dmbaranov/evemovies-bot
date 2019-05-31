@@ -1,7 +1,7 @@
 import { ytsReleaseChecker, scarabeyReleaseChecker } from './release-providers';
 
 export interface ICheckerConfig {
-  imdbid: string;
+  id: string;
   title: string;
   year: number;
 }

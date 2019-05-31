@@ -17,6 +17,7 @@ export function saveToSession(ctx: ContextMessageUpdate, field: SessionDataField
 /**
  * Removing data from the session
  * @param ctx - telegram context
+ * @param field - field to delete
  */
 export function deleteFromSession(ctx: ContextMessageUpdate, field: SessionDataField) {
   logger.debug(ctx, 'Deleting %s from session', field);

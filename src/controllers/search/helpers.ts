@@ -1,24 +1,24 @@
 import { Markup, Extra, ContextMessageUpdate } from 'telegraf';
-import { SearchResult } from 'imdb-api';
 import Movie from '../../models/Movie';
 import User from '../../models/User';
-import { movieSearch } from '../../util/movie-search';
+import { movieSearch, ISearchResult } from '../../util/movie-search';
 import logger from '../../util/logger';
 import { saveToSession, deleteFromSession } from '../../util/session';
 import { releaseChecker } from '../../util/release-checker';
 
 /**
- * Returning list of movies. Taken either from imdb API or from the session
+ * Returning list of movies. Taken either from API or from the session
  * @param ctx - telegram context
  */
-export async function getMovieList(ctx: ContextMessageUpdate): Promise<SearchResult[]> {
-  if (ctx.session.movies) return ctx.session.movies;
+export async function getMovieList(ctx: ContextMessageUpdate): Promise<ISearchResult[]> {
+  if (ctx.session.movies) return ctx.session.movies as ISearchResult[];
 
-  let movies;
+  let movies: ISearchResult[];
 
   try {
     logger.debug(ctx, 'Searching for movie %s', ctx.message.text);
     movies = await movieSearch[ctx.session.language](ctx, { name: ctx.message.text });
+
     saveToSession(ctx, 'movies', movies);
 
     return movies;
@@ -31,13 +31,13 @@ export async function getMovieList(ctx: ContextMessageUpdate): Promise<SearchRes
  * Displays menu with a list of movies
  * @param movies - list of movies
  */
-export function getMoviesMenu(movies: SearchResult[]) {
+export function getMoviesMenu(movies: ISearchResult[]) {
   return Extra.HTML().markup((m: Markup) =>
     m.inlineKeyboard(
       movies.map(item => [
         m.callbackButton(
           `(${item.year}) ${item.title}`,
-          JSON.stringify({ a: 'movie', p: item.imdbid }),
+          JSON.stringify({ a: 'movie', p: item.id }),
           false
         )
       ]),
@@ -61,7 +61,7 @@ export function getMovieControlMenu(ctx: ContextMessageUpdate) {
         ),
         m.callbackButton(
           ctx.i18n.t('scenes.search.add_button'),
-          JSON.stringify({ a: 'add', p: ctx.movie.imdbid }),
+          JSON.stringify({ a: 'add', p: ctx.movie.id }),
           false
         )
       ],
@@ -71,18 +71,18 @@ export function getMovieControlMenu(ctx: ContextMessageUpdate) {
 }
 
 /**
- * Pushing imdbid to the user's observalbe array and clearing movies in session
+ * Pushing id to the user's observable array and clearing movies in session
  * @param ctx - telegram context
  * @param movie - single movie
  */
 export async function addMovieForUser(ctx: ContextMessageUpdate) {
-  const movie: SearchResult = ctx.movie;
+  const movie: ISearchResult = ctx.movie;
   const movieDoc = await Movie.findOneAndUpdate(
     {
-      _id: movie.imdbid
+      _id: movie.id
     },
     {
-      _id: movie.imdbid,
+      _id: movie.id,
       title: movie.title.replace(/ё/, 'e'),
       year: movie.year,
       released: false,
@@ -117,7 +117,7 @@ export async function addMovieForUser(ctx: ContextMessageUpdate) {
 export async function canAddMovie(ctx: ContextMessageUpdate) {
   logger.debug(ctx, 'Checks if can add a movie');
   const movieRelease = await releaseChecker[ctx.session.language]({
-    imdbid: ctx.movie.imdbid,
+    id: ctx.movie.id,
     title: ctx.movie.title,
     year: ctx.movie.year
   });
@@ -126,7 +126,7 @@ export async function canAddMovie(ctx: ContextMessageUpdate) {
 
   if (movieRelease) {
     return ctx.i18n.t('scenes.search.reason_movie_released');
-  } else if (user.observableMovies.some(m => m._id === ctx.movie.imdbid)) {
+  } else if (user.observableMovies.some(m => m._id === ctx.movie.id)) {
     return ctx.i18n.t('scenes.search.reason_already_observing');
   }
 

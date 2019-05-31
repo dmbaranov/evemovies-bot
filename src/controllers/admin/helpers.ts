@@ -1,27 +1,13 @@
-import { Extra, Markup, ContextMessageUpdate } from 'telegraf';
+import { ContextMessageUpdate } from 'telegraf';
 import User from '../../models/User';
 import telegram from '../../telegram';
 
-export function getMainKeyboard(ctx: ContextMessageUpdate) {
-  return Extra.HTML().markup((m: Markup) =>
-    m.inlineKeyboard(
-      [
-        m.callbackButton(
-          ctx.i18n.t('scenes.settings.language_button'),
-          JSON.stringify({ a: 'languageSettings' }),
-          false
-        ),
-        m.callbackButton(
-          ctx.i18n.t('scenes.settings.account_summary_button'),
-          JSON.stringify({ a: 'accountSummary' }),
-          false
-        )
-      ],
-      {}
-    )
-  );
-}
-
+/**
+ * Write message to a specific user or to all existing users
+ * @param ctx - telegram context
+ * @param user - id or 'all'
+ * @param message - text to write
+ */
 export async function write(ctx: ContextMessageUpdate, user: string, message: string) {
   if (!Number.isNaN(+user) && user.length >= 8) {
     // Write to a single user
@@ -46,6 +32,10 @@ export async function write(ctx: ContextMessageUpdate, user: string, message: st
   }
 }
 
+/**
+ * Get users statistics
+ * @param ctx - telegram context
+ */
 export async function getStats(ctx: ContextMessageUpdate) {
   const date = new Date();
   const year = date.getFullYear();
@@ -63,6 +53,10 @@ export async function getStats(ctx: ContextMessageUpdate) {
   );
 }
 
+/**
+ * Display help menu
+ * @param ctx - telegram context
+ */
 export async function getHelp(ctx: ContextMessageUpdate) {
   await ctx.reply(
     'write | [user_id | all] | message - write message to user\n' +

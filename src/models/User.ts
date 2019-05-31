@@ -1,4 +1,4 @@
-import mongoose, { Document, Schema, mongo } from 'mongoose';
+import mongoose, { Document } from 'mongoose';
 import { IMovie } from './Movie';
 
 export interface IUser extends Document {

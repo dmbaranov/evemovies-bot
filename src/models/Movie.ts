@@ -1,10 +1,9 @@
-import mongoose, { Document, Schema, mongo } from 'mongoose';
+import mongoose, { Document } from 'mongoose';
 
 export interface IMovie extends Document {
   _id: string;
   title: string;
   year: number;
-  released: boolean; // TODO: could be deleted
   unreleasedLanguages: string[];
 }
 
