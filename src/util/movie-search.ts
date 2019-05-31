@@ -1,45 +1,6 @@
-// import { ContextMessageUpdate } from 'telegraf';
-import * as imdb from 'imdb-api';
-import { SearchRequest, SearchResult, RequestType } from 'imdb-api';
-import * as rp from 'request-promise';
-// import { tmdb } from './search-providers';
-import logger from './logger';
-
-// const IMDB_SEARCH_PARAMS = {
-//   apiKey: process.env.IMDB_API_KEY,
-//   timeout: 30000
-// };
-//
-// /**
-//  * Returns list of movies from the imdb API
-//  * @param opts - search parameters
-//  */
-// async function imdbSearch(ctx: ContextMessageUpdate, opts: SearchRequest): Promise<SearchResult[]> {
-//   let result;
-//   const parsedYear = opts.name.match(/\[[1,2][0-9]{3}\]$/g);
-//
-//   if (parsedYear) {
-//     opts.year = +parsedYear[0].substr(1, 4);
-//     opts.name = opts.name.slice(0, -7);
-//   }
-//
-//   try {
-//     result = await imdb.search(opts, IMDB_SEARCH_PARAMS);
-//     logger.debug(
-//       ctx,
-//       'Searching for an IMDB movie with the parameters %O, amount of results %d',
-//       opts,
-//       result.results.length
-//     );
-//
-//     return result.results;
-//   } catch (e) {
-//     logger.error(undefined, 'Error occured during imdb searching for movie %O. %O', opts, e);
-//   }
-// }
-
 import { ContextMessageUpdate } from 'telegraf';
-import { filmopotok, tmdb } from './search-providers';
+import logger from './logger';
+import { filmopotok, imdb } from './search-providers';
 
 export interface ISearchParameters {
   title: string;
@@ -62,28 +23,32 @@ const movieSearchWrapper = (provider: Provider) => async (ctx: ContextMessageUpd
   const currentYear = new Date().getFullYear();
   const { language } = ctx.session;
   let title = ctx.message.text;
-  let year: any = ctx.message.text.match(/\[[1,2][0-9]{3}\]$/g);
+  let year: any = ctx.message.text.match(/\[[1,2][0-9]{3}\]$/g); // e.g. [2019]
 
   if (year) {
     year = Number(year[0].slice(1, -1));
     title = title.slice(0, -7);
   }
 
-  // const year = ctx.message.text.match(/\[[1,2][0-9]{3}\]$/g);
-
-  const result = await provider({
+  const rawResult = await provider({
     title,
     year,
     language
   });
 
-  console.log(result);
-  return result.filter(movie => movie.year >= currentYear - MOVIE_TTL);
+  const filteredResult = rawResult.filter(movie => movie.year >= currentYear - MOVIE_TTL);
+
+  logger.debug(
+    ctx,
+    'Movie search: params %O, results length %d',
+    { title, year, language },
+    filteredResult.length
+  );
+
+  return filteredResult;
 };
 
 export const movieSearch = {
-  en: movieSearchWrapper(filmopotok),
-  ru: movieSearchWrapper(tmdb)
-  // en: imdbSearch,
-  // ru: filmopotokSearch
-} as any;
+  en: movieSearchWrapper(imdb),
+  ru: movieSearchWrapper(filmopotok)
+} as any; // TODO: fix this any

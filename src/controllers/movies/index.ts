@@ -6,6 +6,7 @@ import { getMoviesMenu } from './helpers';
 import { exposeMovie } from './middlewares';
 import { movieAction, backAction, deleteAction } from './actions';
 import User from '../../models/User';
+import { IMovie } from '../../models/Movie';
 import { saveToSession, deleteFromSession } from '../../util/session';
 import { getMainKeyboard, getBackKeyboard } from '../../util/keyboards';
 import logger from '../../util/logger';
@@ -17,7 +18,7 @@ movies.enter(async (ctx: ContextMessageUpdate) => {
   logger.debug(ctx, 'Enters movies scene');
   const { backKeyboard } = getBackKeyboard(ctx);
   const user = await User.findById(ctx.from.id);
-  const movies = user.observableMovies;
+  const movies: IMovie[] = user.observableMovies;
   saveToSession(ctx, 'movies', movies);
 
   if (movies.length) {

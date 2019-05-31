@@ -1,5 +1,6 @@
 import { ContextMessageUpdate } from 'telegraf';
 import { getMovieControlMenu, getMoviesMenu, deleteMovieFromObservables } from './helpers';
+import { IMovie } from '../../models/Movie';
 import logger from '../../util/logger';
 
 export const movieAction = async (ctx: ContextMessageUpdate) => {
@@ -16,7 +17,7 @@ export const movieAction = async (ctx: ContextMessageUpdate) => {
 export const backAction = async (ctx: ContextMessageUpdate) => {
   await ctx.editMessageText(
     ctx.i18n.t('scenes.movies.list_of_movies'),
-    getMoviesMenu(ctx.session.movies)
+    getMoviesMenu(ctx.session.movies as IMovie[])
   );
 
   await ctx.answerCbQuery();

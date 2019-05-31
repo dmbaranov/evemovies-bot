@@ -15,7 +15,7 @@ export async function exposeMovie(ctx: ContextMessageUpdate, next: Function) {
   }
 
   const action = JSON.parse(ctx.callbackQuery.data);
-  const movie = movies.find(item => item.imdbid === action.p);
+  const movie = movies.find(item => item.id === action.p);
   ctx.movie = movie;
   return next();
 }

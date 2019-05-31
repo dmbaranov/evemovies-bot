@@ -1,14 +1,17 @@
-import * as Telegraf from 'telegraf';
 import { I18n } from 'telegraf-i18n';
+import { IMovie } from '../models/Movie';
+import { ISearchResult } from '../util/movie-search';
 
 declare module 'telegraf' {
   interface ContextMessageUpdate {
     i18n: I18n;
     scene: any;
     session: {
-      movies: any;
-      settingsScene: any;
-      language: any;
+      movies: IMovie[] | ISearchResult[];
+      settingsScene: {
+        messagesToDelete: any[];
+      };
+      language: 'en' | 'ru';
     };
     movie: any;
   }

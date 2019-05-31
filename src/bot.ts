@@ -25,13 +25,10 @@ import { updateUserTimestamp } from './middlewares/update-user-timestamp';
 import { getUserInfo } from './middlewares/user-info';
 import { isAdmin } from './middlewares/is-admin';
 
-mongoose.connect(
-  `mongodb://localhost:27017/${process.env.DATABASE_HOST}`,
-  {
-    useNewUrlParser: true,
-    useFindAndModify: false
-  }
-);
+mongoose.connect(`mongodb://localhost:27017/${process.env.DATABASE_HOST}`, {
+  useNewUrlParser: true,
+  useFindAndModify: false
+});
 mongoose.connection.on('error', err => {
   logger.error(
     undefined,

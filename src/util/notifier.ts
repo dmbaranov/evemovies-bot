@@ -22,7 +22,7 @@ export async function checkUnreleasedMovies() {
     for (const language of movie.unreleasedLanguages) {
       await sleep(0.5);
       const checkResult = await releaseChecker[language as lang]({
-        imdbid: movie._id,
+        id: movie._id,
         title: movie.title,
         year: movie.year
       });
