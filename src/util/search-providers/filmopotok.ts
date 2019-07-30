@@ -22,6 +22,7 @@ export async function filmopotok(params: ISearchParameters): Promise<ISearchResu
     .map((item: any) => ({
       id: item.slug.slice(0, 40), // Telegram can't pass more than 64 bytes as a callback data
       title: item.value,
-      year: item.label.match(/> \((\d{4})/)[1]
+      year: item.label.match(/> \((\d{4})/)[1],
+      posterUrl: item.label.match(/http:\/\/.*"/g)[0].slice(0, -1)
     }));
 }

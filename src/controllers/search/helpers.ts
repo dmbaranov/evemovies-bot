@@ -17,7 +17,7 @@ export async function getMovieList(ctx: ContextMessageUpdate): Promise<ISearchRe
 
   try {
     logger.debug(ctx, 'Searching for movie %s', ctx.message.text);
-    movies = await movieSearch[ctx.session.language](ctx, { name: ctx.message.text });
+    movies = await movieSearch[ctx.session.language](ctx);
 
     saveToSession(ctx, 'movies', movies);
 

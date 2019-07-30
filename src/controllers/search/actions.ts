@@ -10,13 +10,12 @@ import { deleteFromSession } from '../../util/session';
 import logger from '../../util/logger';
 
 export const movieAction = async (ctx: ContextMessageUpdate) => {
-  await ctx.editMessageText(
-    ctx.i18n.t('scenes.search.chosen_movie', {
-      title: ctx.movie.title
-    }),
-    getMovieControlMenu(ctx)
-  );
+  const { title, posterUrl } = ctx.movie;
+  const text = ctx.i18n.t('scenes.search.chosen_movie', {
+    title
+  });
 
+  await ctx.editMessageText(`${text}\n <a href="${posterUrl}">.</a>`, getMovieControlMenu(ctx));
   await ctx.answerCbQuery();
 };
 

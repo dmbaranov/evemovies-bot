@@ -12,6 +12,7 @@ export interface ISearchResult {
   id: string;
   title: string;
   year: number;
+  posterUrl: string;
 }
 
 type Provider = (params: ISearchParameters) => Promise<ISearchResult[]>;
@@ -48,7 +49,11 @@ const movieSearchWrapper = (provider: Provider) => async (ctx: ContextMessageUpd
   return filteredResult;
 };
 
+type MovieSearchExport = {
+  [key: string]: (ctx: ContextMessageUpdate) => Promise<ISearchResult[]>;
+};
+
 export const movieSearch = {
   en: movieSearchWrapper(imdb),
   ru: movieSearchWrapper(filmopotok)
-} as any; // TODO: fix this any
+} as MovieSearchExport;

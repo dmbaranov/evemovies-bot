@@ -20,9 +20,16 @@ export async function imdb(params: ISearchParameters): Promise<ISearchResult[]> 
     return result.results.map(item => ({
       id: item.imdbid,
       title: item.title,
-      year: item.year
+      year: item.year,
+      posterUrl: item.poster
     }));
   } catch (e) {
-    logger.error(undefined, 'Error occured during imdb searching for movie %O. %O', params, e);
+    if (e.message && e.message.includes('Movie not found')) {
+      // Don't log this 404 message
+    } else {
+      logger.error(undefined, 'Error occured during imdb searching for movie %O. %O', params, e);
+    }
+
+    return [];
   }
 }
