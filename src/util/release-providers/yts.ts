@@ -1,13 +1,13 @@
 import * as rp from 'request-promise';
 import logger from '../logger';
 import { ICheckerConfig } from '../release-checker';
-import { isNumberInRage, checkStringSimiliarity } from '../common';
+import { isNumberInRage, checkStringSimilarity } from '../common';
 
 /**
  * Returns true if movie has been released, false otherwise
  * @param config - config to check the movie
  */
-export async function ytsReleaseChecker(config: ICheckerConfig): Promise<Boolean> {
+export async function ytsReleaseChecker(config: ICheckerConfig): Promise<boolean> {
   logger.debug(undefined, 'Checking international release for movie %s', config.id);
   const url = encodeURI(`https://yts.am/api/v2/list_movies.json?query_term=${config.id}`);
 
@@ -33,7 +33,7 @@ export async function ytsReleaseChecker(config: ICheckerConfig): Promise<Boolean
     return (
       isGoodQuality &&
       movie.imdb_code === config.id &&
-      checkStringSimiliarity(movie.title_english, config.title) &&
+      checkStringSimilarity(movie.title_english, config.title) &&
       isNumberInRage(movie.year, config.year)
     );
   });

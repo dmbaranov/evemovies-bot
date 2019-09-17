@@ -8,10 +8,7 @@ import { IMovie } from '../../models/Movie';
  */
 export function exposeMovie(ctx: ContextMessageUpdate, next: Function) {
   const action = JSON.parse(ctx.callbackQuery.data);
-  const movie: IMovie = (ctx.session.movies as IMovie[]).find(
-    (item: IMovie) => item._id === action.p
-  );
-  ctx.movie = movie;
+  ctx.movie = (ctx.session.movies as IMovie[]).find((item: IMovie) => item._id === action.p);
 
   return next();
 }

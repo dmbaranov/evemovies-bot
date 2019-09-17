@@ -5,43 +5,36 @@ import Movie, { IMovie } from '../models/Movie';
 import User from '../models/User';
 import telegram from '../telegram';
 
-// TODO: improve
-type lang = 'en' | 'ru';
-
 /**
  * Takes all unreleased movies, checks each it it has been released and notifies users who observe this movie.
  */
 export async function checkUnreleasedMovies() {
   logger.debug(undefined, 'Starting to check unreleased movies');
 
-  const unreleasedMovies = await Movie.find({
-    'unreleasedLanguages.0': { $exists: true }
-  });
+  const unreleasedMovies = await Movie.find({ released: false });
 
   for (const movie of unreleasedMovies) {
-    for (const language of movie.unreleasedLanguages) {
-      await sleep(0.5);
-      const checkResult = await releaseChecker[language as lang]({
-        id: movie._id,
-        title: movie.title,
-        year: movie.year
-      });
+    await sleep(0.5);
+    const checkResult = await releaseChecker[movie.language as 'en' | 'ru']({
+      id: movie._id,
+      title: movie.title,
+      year: movie.year
+    });
 
-      if (checkResult) {
-        logger.debug(undefined, 'Movie has been released, %O, language %s', movie, language);
-        await notifyAndUpdateUsers(movie, language);
-        await Movie.findOneAndUpdate(
-          {
-            _id: movie._id
-          },
-          {
-            $pull: { unreleasedLanguages: language }
-          },
-          {
-            new: true
-          }
-        );
-      }
+    if (checkResult) {
+      logger.debug(undefined, 'Movie has been released, %O', movie);
+      await notifyAndUpdateUsers(movie);
+      await Movie.findOneAndUpdate(
+        {
+          _id: movie._id
+        },
+        {
+          released: false
+        },
+        {
+          new: true
+        }
+      );
     }
   }
 }
@@ -50,14 +43,13 @@ export async function checkUnreleasedMovies() {
  * Find all users who observes a movie, notify them and remove movie from observables array
  * @param movie - single movie
  */
-async function notifyAndUpdateUsers(movie: IMovie, language: string) {
+async function notifyAndUpdateUsers(movie: IMovie) {
   const usersToNotify = await User.find({
-    observableMovies: movie._id,
-    language
+    observableMovies: movie._id
   });
 
   for (const user of usersToNotify) {
-    logger.debug(undefined, 'Notifiying user %s about movie %s', user.username, movie.title);
+    logger.debug(undefined, 'Notifying user %s about movie %s', user.username, movie.title);
     // TODO: move text to translations
     const message =
       user.language === 'en'

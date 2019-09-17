@@ -48,7 +48,7 @@ export function getMoviesMenu(movies: ISearchResult[]) {
 
 /**
  * Menu to control current movie
- * @param movie - single movie
+ * @param ctx - telegram context
  */
 export function getMovieControlMenu(ctx: ContextMessageUpdate) {
   return Extra.HTML().markup((m: Markup) =>
@@ -73,7 +73,6 @@ export function getMovieControlMenu(ctx: ContextMessageUpdate) {
 /**
  * Pushing id to the user's observable array and clearing movies in session
  * @param ctx - telegram context
- * @param movie - single movie
  */
 export async function addMovieForUser(ctx: ContextMessageUpdate) {
   const movie: ISearchResult = ctx.movie;
@@ -85,8 +84,9 @@ export async function addMovieForUser(ctx: ContextMessageUpdate) {
       _id: movie.id,
       title: movie.title.replace(/ё/, 'e'),
       year: movie.year,
-      released: false,
-      $addToSet: { unreleasedLanguages: ctx.session.language }
+      posterUrl: movie.posterUrl,
+      language: ctx.session.language,
+      released: false
     },
     {
       new: true,
@@ -112,7 +112,6 @@ export async function addMovieForUser(ctx: ContextMessageUpdate) {
 /**
  * Perform several checks, returns either a reason why movie can't be added or true
  * @param ctx - telegram context
- * @param movie - single movie
  */
 export async function canAddMovie(ctx: ContextMessageUpdate) {
   logger.debug(ctx, 'Checks if can add a movie');

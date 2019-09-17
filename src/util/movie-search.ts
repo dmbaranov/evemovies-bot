@@ -24,10 +24,11 @@ const movieSearchWrapper = (provider: Provider) => async (ctx: ContextMessageUpd
   const currentYear = new Date().getFullYear();
   const { language } = ctx.session;
   let title = ctx.message.text;
-  let year: any = ctx.message.text.match(/\[[1,2][0-9]{3}\]$/g); // e.g. [2019]
+  let year;
+  const yearSearchResult = ctx.message.text.match(/\[[1,2][0-9]{3}]$/g); // e.g. [2019]
 
-  if (year) {
-    year = Number(year[0].slice(1, -1));
+  if (yearSearchResult) {
+    year = Number(yearSearchResult[0].slice(1, -1));
     title = title.slice(0, -7);
   }
 
@@ -49,11 +50,7 @@ const movieSearchWrapper = (provider: Provider) => async (ctx: ContextMessageUpd
   return filteredResult;
 };
 
-type MovieSearchExport = {
-  [key: string]: (ctx: ContextMessageUpdate) => Promise<ISearchResult[]>;
-};
-
 export const movieSearch = {
   en: movieSearchWrapper(imdb),
   ru: movieSearchWrapper(filmopotok)
-} as MovieSearchExport;
+};

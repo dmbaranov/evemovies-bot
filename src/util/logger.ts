@@ -3,7 +3,7 @@ import util from 'util';
 import winston, { format } from 'winston';
 
 /**
- * Adds user id and nickname if found. Also formats message to display compelx objects
+ * Adds user id and nickname if found. Also formats message to display complex objects
  * @param ctx - telegram context
  * @param msg  - message
  * @param data - object to log

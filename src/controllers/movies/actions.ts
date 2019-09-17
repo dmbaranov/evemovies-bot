@@ -4,10 +4,11 @@ import { IMovie } from '../../models/Movie';
 import logger from '../../util/logger';
 
 export const movieAction = async (ctx: ContextMessageUpdate) => {
+  const text = ctx.i18n.t('scenes.movies.chosen_movie', {
+    title: ctx.movie.title
+  });
   await ctx.editMessageText(
-    ctx.i18n.t('scenes.movies.chosen_movie', {
-      title: ctx.movie.title
-    }),
+    `${text}<a href="${ctx.movie.posterUrl}">.</a>`,
     getMovieControlMenu(ctx)
   );
 

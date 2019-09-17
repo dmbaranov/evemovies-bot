@@ -44,7 +44,7 @@ start.leave(async (ctx: ContextMessageUpdate) => {
 
 start.command('saveme', leave());
 start.action(/languageChange/, languageChangeAction);
-start.action(/confirmAccount/, async (ctx: ContextMessageUpdate, next: Function) => {
+start.action(/confirmAccount/, async (ctx: ContextMessageUpdate) => {
   await ctx.answerCbQuery();
   ctx.scene.leave();
 });

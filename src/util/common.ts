@@ -25,7 +25,7 @@ export function isNumberInRage(number: number, base: number, step: number = 1) {
  * @param a - string to compare
  * @param b - string to compare
  */
-export function checkStringSimiliarity(a: string, b: string) {
+export function checkStringSimilarity(a: string, b: string) {
   const first = a.toLocaleLowerCase();
   const second = b.toLocaleLowerCase();
 

@@ -24,7 +24,7 @@ export function getMoviesMenu(movies: IMovie[]) {
 
 /**
  * Menu to control current movie
- * @param movie - single movie
+ * @param ctx - telegram context
  */
 export function getMovieControlMenu(ctx: ContextMessageUpdate) {
   return Extra.HTML().markup((m: Markup) =>

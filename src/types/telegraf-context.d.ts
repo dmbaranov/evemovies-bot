@@ -14,5 +14,6 @@ declare module 'telegraf' {
       language: 'en' | 'ru';
     };
     movie: any;
+    webhookReply: boolean;
   }
 }

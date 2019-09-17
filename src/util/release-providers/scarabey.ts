@@ -2,13 +2,13 @@ import * as rp from 'request-promise';
 import cheerio from 'cheerio';
 import logger from '../logger';
 import { ICheckerConfig } from '../release-checker';
-import { isNumberInRage, checkStringSimiliarity } from '../common';
+import { isNumberInRage, checkStringSimilarity } from '../common';
 
 /**
  * Returns true if movie has been released, false otherwise
  * @param config - config to check the movie
  */
-export async function scarabeyReleaseChecker(config: ICheckerConfig): Promise<Boolean> {
+export async function scarabeyReleaseChecker(config: ICheckerConfig): Promise<boolean> {
   logger.debug(undefined, 'Checking russian release for movie %s', config.title);
 
   const url = encodeURI(`http://scarabey.org/?s=${config.title}`);
@@ -46,7 +46,7 @@ export async function scarabeyReleaseChecker(config: ICheckerConfig): Promise<Bo
         .text();
 
       if (
-        checkStringSimiliarity(movieTitle, configTitle) &&
+        checkStringSimilarity(movieTitle, configTitle) &&
         isNumberInRage(+config.year, +movieYear)
       ) {
         released = true;

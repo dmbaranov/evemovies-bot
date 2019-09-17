@@ -4,7 +4,6 @@ import telegram from '../../telegram';
 /**
  * Sends a message to the admin
  * @param ctx - telegram context
- * @param msg - message to send
  */
 export async function sendMessage(ctx: ContextMessageUpdate) {
   const msg = `From: ${JSON.stringify(ctx.from)}.\n\nMessage: ${ctx.message.text}`;

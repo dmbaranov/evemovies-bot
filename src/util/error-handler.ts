@@ -11,7 +11,7 @@ const asyncWrapper = (fn: Function) => {
       return await fn(ctx);
     } catch (error) {
       logger.error(ctx, 'asyncWrapper error, %O', error);
-      ctx.reply(ctx.i18n.t('shared.something_went_wrong'));
+      await ctx.reply(ctx.i18n.t('shared.something_went_wrong'));
       return next();
     }
   };

@@ -12,7 +12,7 @@ const languagesMap = {
  * @param params - search parameters
  */
 export async function tmdb(params: ISearchParameters): Promise<ISearchResult[]> {
-  // TODO: it has limits 40 requests per 10 seconds. Make a race betweo
+  // TODO: it has limits 40 requests per 10 seconds. Make a race between
   //  en response and setTimeout 2500
 
   const year = params.year ? `&year=${params.year}` : '';
@@ -37,7 +37,7 @@ export async function tmdb(params: ISearchParameters): Promise<ISearchResult[]> 
       year: Number(movie.release_date.slice(0, 4))
     }));
   } catch (e) {
-    logger.error(undefined, 'Error occured during tmdb search for movie %O. %O', params, e);
+    logger.error(undefined, 'Error occurred during tmdb search for movie %O. %O', params, e);
 
     return [];
   }

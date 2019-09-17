@@ -13,7 +13,7 @@ admin.enter(async (ctx: ContextMessageUpdate) => {
   logger.debug(ctx, 'Enters admin scene');
   const { backKeyboard } = getBackKeyboard(ctx);
 
-  ctx.reply('Welcome to Admin stage', backKeyboard);
+  await ctx.reply('Welcome to Admin stage', backKeyboard);
 });
 
 admin.leave(async (ctx: ContextMessageUpdate) => {

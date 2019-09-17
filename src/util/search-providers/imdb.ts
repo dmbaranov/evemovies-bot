@@ -27,7 +27,7 @@ export async function imdb(params: ISearchParameters): Promise<ISearchResult[]> 
     if (e.message && e.message.includes('Movie not found')) {
       // Don't log this 404 message
     } else {
-      logger.error(undefined, 'Error occured during imdb searching for movie %O. %O', params, e);
+      logger.error(undefined, 'Error occurred during imdb searching for movie %O. %O', params, e);
     }
 
     return [];

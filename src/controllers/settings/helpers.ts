@@ -62,6 +62,7 @@ export function getAccountSummaryKeyboard(ctx: ContextMessageUpdate) {
 /**
  * Send message and saving it to the session. Later it can be deleted.
  * Used to avoid messages duplication
+ * @param ctx - telegram context
  * @param translationKey - translation key
  * @param extra - extra for the message, e.g. keyboard
  */
@@ -70,8 +71,8 @@ export async function sendMessageToBeDeletedLater(
   translationKey: string,
   extra?: ExtraReplyMessage
 ) {
-  (ctx as any).webhookReply = false;
-  const message: any = await ctx.reply(ctx.i18n.t(translationKey), extra);
+  ctx.webhookReply = false;
+  const message = await ctx.reply(ctx.i18n.t(translationKey), extra);
   const messagesToDelete = get(ctx.session, 'settingsScene.messagesToDelete', []);
 
   saveToSession(ctx, 'settingsScene', {

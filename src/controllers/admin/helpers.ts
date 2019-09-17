@@ -5,17 +5,25 @@ import telegram from '../../telegram';
 /**
  * Write message to a specific user or to all existing users
  * @param ctx - telegram context
- * @param user - id or 'all'
+ * @param recipient - id or 'all.language'
  * @param message - text to write
  */
-export async function write(ctx: ContextMessageUpdate, user: string, message: string) {
-  if (!Number.isNaN(+user) && user.length >= 8) {
+export async function write(ctx: ContextMessageUpdate, recipient: string, message: string) {
+  if (!Number.isNaN(+recipient) && recipient.length >= 6) {
     // Write to a single user
-    await telegram.sendMessage(Number(user), message);
-    await ctx.reply(`Successfully sent message to: ${user}, content: ${message}`);
-  } else if (user === 'all') {
+    await telegram.sendMessage(Number(recipient), message);
+    await ctx.reply(`Successfully sent message to: ${recipient}, content: ${message}`);
+  } else if (recipient.includes('all')) {
     // Write to everyone
-    const users = await User.find();
+    const SUPPORTED_LANGUAGES = ['en', 'ru'];
+    const language = recipient.split('.')[1];
+
+    if (!SUPPORTED_LANGUAGES.includes(language)) {
+      await ctx.reply(`Unsupported language ${language}`);
+      return;
+    }
+
+    const users = await User.find({ language }); // Filter by language
 
     users.forEach((user, index) => {
       setTimeout(() => {

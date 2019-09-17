@@ -24,6 +24,7 @@ import { updateLanguage } from './util/language';
 import { updateUserTimestamp } from './middlewares/update-user-timestamp';
 import { getUserInfo } from './middlewares/user-info';
 import { isAdmin } from './middlewares/is-admin';
+import Telegram from './telegram';
 
 mongoose.connect(`mongodb://localhost:27017/${process.env.DATABASE_HOST}`, {
   useNewUrlParser: true,
@@ -32,7 +33,7 @@ mongoose.connect(`mongodb://localhost:27017/${process.env.DATABASE_HOST}`, {
 mongoose.connection.on('error', err => {
   logger.error(
     undefined,
-    `Error occured during an attempt to establish connection with the database: %O`,
+    `Error occurred during an attempt to establish connection with the database: %O`,
     err
   );
   process.exit(1);
@@ -112,7 +113,7 @@ mongoose.connection.on('open', () => {
             [m.urlButton(`Paypal`, process.env.PAYPAL_LINK, false)],
             [m.urlButton(`Yandex.Money`, process.env.YANDEX_LINK, false)],
             [m.urlButton(`WebMoney`, process.env.WEBMONEY_LINK, false)]
-          ] as any,
+          ],
           {}
         )
       );
@@ -154,6 +155,7 @@ function startDevMode(bot: Telegraf<ContextMessageUpdate>) {
 }
 
 async function startProdMode(bot: Telegraf<ContextMessageUpdate>) {
+  // If webhook not working, check fucking motherfucking UFW that probably blocks a port...
   logger.debug(undefined, 'Starting a bot in production mode');
   const tlsOptions = {
     key: fs.readFileSync(process.env.PATH_TO_KEY),
@@ -167,6 +169,10 @@ async function startProdMode(bot: Telegraf<ContextMessageUpdate>) {
     }
   );
 
-  bot.startWebhook(`/${process.env.TELEGRAM_TOKEN}`, tlsOptions, +process.env.WEBHOOK_PORT);
+  await bot.startWebhook(`/${process.env.TELEGRAM_TOKEN}`, tlsOptions, +process.env.WEBHOOK_PORT);
+
+  const webhookStatus = await Telegram.getWebhookInfo();
+  console.log('Webhook status', webhookStatus);
+
   checkUnreleasedMovies();
 }

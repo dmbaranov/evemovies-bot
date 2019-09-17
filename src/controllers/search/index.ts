@@ -28,7 +28,7 @@ searcher.leave(async (ctx: ContextMessageUpdate) => {
 searcher.command('saveme', leave());
 searcher.hears(match('keyboards.back_keyboard.back'), leave());
 
-searcher.on('text', async (ctx: ContextMessageUpdate, next: Function) => {
+searcher.on('text', async (ctx: ContextMessageUpdate) => {
   deleteFromSession(ctx, 'movies');
   const movies = await getMovieList(ctx);
 
