@@ -33,7 +33,7 @@
       "pick_language": "Pick language ❗️Movies will be tracked for the same language❗️",
       "language_changed": "Language has been changed!",
       "what_to_change": "What do you want to change?",
-      "account_summary": "Your account summary:\n\nUsername: ${username}\nID: ${id}\nMovies notifications sent: ${totalMovies}",
+      "account_summary": "Your account summary:\n\nVersion: ${version}\nUsername: ${username}\nID: ${id}\nMovies notifications sent: ${totalMovies}",
       "language_button": "🗣 Language",
       "account_summary_button": "🔑 Account summary",
       "back_button": "◀️ Back",
