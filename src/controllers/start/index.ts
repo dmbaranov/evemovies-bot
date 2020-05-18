@@ -28,7 +28,8 @@ start.enter(async (ctx: ContextMessageUpdate) => {
       name: ctx.from.first_name + ' ' + ctx.from.last_name,
       observableMovies: [],
       lastActivity: now,
-      totalMovies: 0
+      totalMovies: 0,
+      language: 'en'
     });
 
     await newUser.save();
