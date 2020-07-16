@@ -29,7 +29,7 @@ export async function checkUnreleasedMovies() {
           _id: movie._id
         },
         {
-          released: false
+          released: true
         },
         {
           new: true
