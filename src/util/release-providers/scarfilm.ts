@@ -30,6 +30,8 @@ export async function scarfilmReleaseChecker(config: ICheckerConfig): Promise<bo
 
     if (!$(elem).find('.item-main').text().includes('Уже в сети')) return;
 
+    if ($(elem).find('.item-snippet').text().includes('Перевод / озвучка')) return;
+
     const configTitle = config.title.replace(/ё/, 'е');
 
     const movieData = $(elem)
