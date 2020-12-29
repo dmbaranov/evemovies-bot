@@ -5,6 +5,7 @@ import { ICheckerConfig } from '../release-checker';
 import { isNumberInRage, checkStringSimilarity } from '../common';
 
 /**
+ * PROVIDER HAS BEEN DEPRECATED AND IS LEFT HERE FOR HISTORICAL PURPOSES
  * Returns true if movie has been released, false otherwise
  * @param config - config to check the movie
  */
@@ -41,9 +42,7 @@ export async function scarabeyReleaseChecker(config: ICheckerConfig): Promise<bo
         .trim()
         .toLocaleLowerCase();
 
-      const movieYear = $(elem)
-        .find('.archive-year strong')
-        .text();
+      const movieYear = $(elem).find('.archive-year strong').text();
 
       if (
         checkStringSimilarity(movieTitle, configTitle) &&
