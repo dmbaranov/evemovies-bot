@@ -155,7 +155,7 @@ function startDevMode(bot: Telegraf<ContextMessageUpdate>) {
 }
 
 async function startProdMode(bot: Telegraf<ContextMessageUpdate>) {
-  // If webhook not working, check fucking motherfucking UFW that probably blocks a port...
+  // If webhook not working, check UFW that probably blocks a port...
   logger.debug(undefined, 'Starting a bot in production mode');
   const tlsOptions = {
     key: fs.readFileSync(process.env.PATH_TO_KEY),
