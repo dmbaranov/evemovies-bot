@@ -9,7 +9,7 @@ import { isNumberInRage, checkStringSimilarity } from '../common';
  */
 export async function ytsReleaseChecker(config: ICheckerConfig): Promise<boolean> {
   logger.debug(undefined, 'Checking international release for movie %s', config.id);
-  const url = encodeURI(`https://yts.am/api/v2/list_movies.json?query_term=${config.id}`);
+  const url = encodeURI(`https://yts.mx/api/v2/list_movies.json?query_term=${config.id}`);
 
   let response;
 
