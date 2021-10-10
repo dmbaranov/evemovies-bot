@@ -12,19 +12,26 @@ const IMDB_SEARCH_PARAMS = {
  * @param params - search parameters
  */
 export async function imdb(params: ISearchParameters): Promise<ISearchResult[]> {
-  let result;
 
   try {
-    result = await imdbAPI.search({ name: params.title, year: params.year }, IMDB_SEARCH_PARAMS);
+    const imdbID = /([tt])\w+/;
+    if (imdbID.exec(params.title)) {
+      let findById = await imdbAPI.get({ id: params.title }, IMDB_SEARCH_PARAMS);
+      return [
+        { id: findById.imdbid, title: findById.title, year: findById.year, posterUrl: findById.poster }
+      ];
+    } else {
+      let search = await imdbAPI.search({ name: params.title, year: params.year }, IMDB_SEARCH_PARAMS);
+      return search.results.map(item => ({
+        id: item.imdbid,
+        title: item.title,
+        year: item.year,
+        posterUrl: item.poster
+      }));
+    }
 
-    return result.results.map(item => ({
-      id: item.imdbid,
-      title: item.title,
-      year: item.year,
-      posterUrl: item.poster
-    }));
   } catch (e) {
-    if (e.message && e.message.includes('Movie not found')) {
+    if (e.message && (e.message.includes('Movie not found') || e.message.includes('Incorrect IMDb ID'))) {
       // Don't log this 404 message
     } else {
       logger.error(undefined, 'Error occurred during imdb searching for movie %O. %O', params, e);

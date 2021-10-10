@@ -26,7 +26,7 @@
       "add_button": "➕ Add",
       "reason_movie_released": "🔔 This movie has been already released.",
       "reason_already_observing": "🚫You're already observing this movie.",
-      "welcome_to_search": "🚀 Activating search engine! Just type the title in and let's go!\n\nDon't forget that if you need more relevant results, you can specify a year in square brackets like this: star wars [2003]",
+      "welcome_to_search": "🚀 Activating search engine! Just type the title in and let's go!\n\nDon't forget that if you need more relevant results, you can specify a year in square brackets like this: <code>star wars [2003]</code> or you can paste an IMDB_ID in this format: <code>tt5433138</code>",
       "no_movies_found": "🗑 No movies were found... Try to specify your request"
     },
     "settings": {
