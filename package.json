@@ -1,6 +1,6 @@
 {
   "name": "telegram-bot",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "With this bot you won't skip the moment when your favorite movies are available on the torrents!",
   "author": "Dmitrii Baranov",
   "scripts": {

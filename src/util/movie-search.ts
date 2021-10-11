@@ -13,6 +13,7 @@ export interface ISearchResult {
   title: string;
   year: number;
   posterUrl: string;
+  filter: boolean;
 }
 
 type Provider = (params: ISearchParameters) => Promise<ISearchResult[]>;
@@ -38,7 +39,10 @@ const movieSearchWrapper = (provider: Provider) => async (ctx: ContextMessageUpd
     language
   });
 
-  const filteredResult = rawResult.filter(movie => movie.year >= currentYear - MOVIE_TTL);
+  let filteredResult = rawResult;
+  if (rawResult[0] && rawResult[0].filter == true) {
+    filteredResult = rawResult.filter(movie => movie.year >= currentYear - MOVIE_TTL);
+  }
 
   logger.debug(
     ctx,

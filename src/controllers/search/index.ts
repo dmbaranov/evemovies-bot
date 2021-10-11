@@ -15,7 +15,7 @@ const searcher = new Scene('search');
 searcher.enter(async (ctx: ContextMessageUpdate) => {
   logger.debug(ctx, 'Enter search scene');
   const { backKeyboard } = getBackKeyboard(ctx);
-  await ctx.reply(ctx.i18n.t('scenes.search.welcome_to_search'), backKeyboard);
+  await ctx.replyWithHTML(ctx.i18n.t('scenes.search.welcome_to_search'), backKeyboard);
 });
 searcher.leave(async (ctx: ContextMessageUpdate) => {
   logger.debug(ctx, 'Leaves search scene');
