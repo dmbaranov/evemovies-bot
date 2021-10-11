@@ -14,7 +14,7 @@ const IMDB_SEARCH_PARAMS = {
 export async function imdb(params: ISearchParameters): Promise<ISearchResult[]> {
 
   try {
-    const imdbID = /([tt])\w+/;
+    const imdbID = /[t]{2}[0-9]+/;
     if (imdbID.exec(params.title)) {
       let findById = await imdbAPI.get({ id: params.title }, IMDB_SEARCH_PARAMS);
       return [
