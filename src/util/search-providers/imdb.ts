@@ -18,7 +18,13 @@ export async function imdb(params: ISearchParameters): Promise<ISearchResult[]> 
     if (imdbID.exec(params.title)) {
       let findById = await imdbAPI.get({ id: params.title }, IMDB_SEARCH_PARAMS);
       return [
-        { id: findById.imdbid, title: findById.title, year: findById.year, posterUrl: findById.poster }
+        {
+          id: findById.imdbid,
+          title: findById.title,
+          year: findById.year,
+          posterUrl: findById.poster,
+          filter: false
+        }
       ];
     } else {
       let search = await imdbAPI.search({ name: params.title, year: params.year }, IMDB_SEARCH_PARAMS);
@@ -26,7 +32,8 @@ export async function imdb(params: ISearchParameters): Promise<ISearchResult[]> 
         id: item.imdbid,
         title: item.title,
         year: item.year,
-        posterUrl: item.poster
+        posterUrl: item.poster,
+        filter: true
       }));
     }
 
