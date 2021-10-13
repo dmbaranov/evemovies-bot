@@ -39,9 +39,9 @@ const movieSearchWrapper = (provider: Provider) => async (ctx: ContextMessageUpd
     language
   });
 
-  let filteredResult = rawResult;
+  let filteredResult = rawResult.filter((v,i,a)=>a.findIndex(t=>(t.id === v.id))===i);
   if (rawResult[0] && rawResult[0].filter == true) {
-    filteredResult = rawResult.filter(movie => movie.year >= currentYear - MOVIE_TTL);
+    filteredResult = filteredResult.filter(movie => movie.year >= currentYear - MOVIE_TTL);
   }
 
   logger.debug(
