@@ -12,31 +12,31 @@ const IMDB_SEARCH_PARAMS = {
  * @param params - search parameters
  */
 export async function imdb(params: ISearchParameters): Promise<ISearchResult[]> {
-
   try {
-    const imdbID = /[t]{2}[0-9]+/;
-    if (imdbID.exec(params.title)) {
-      let findById = await imdbAPI.get({ id: params.title }, IMDB_SEARCH_PARAMS);
+    const imdbIdChecker = /[t]{2}[0-9]+/;
+
+    if (imdbIdChecker.exec(params.title)) {
+      const imdbIdResult = await imdbAPI.get({ id: params.title }, IMDB_SEARCH_PARAMS);
+
       return [
         {
-          id: findById.imdbid,
-          title: findById.title,
-          year: findById.year,
-          posterUrl: findById.poster,
-          filter: false
+          id: imdbIdResult.imdbid,
+          title: imdbIdResult.title,
+          year: imdbIdResult.year,
+          posterUrl: imdbIdResult.poster,
+          skipFiltering: true
         }
       ];
     } else {
-      let search = await imdbAPI.search({ name: params.title, year: params.year }, IMDB_SEARCH_PARAMS);
-      return search.results.map(item => ({
+      const results = await imdbAPI.search({ name: params.title, year: params.year }, IMDB_SEARCH_PARAMS);
+
+      return results.results.map((item) => ({
         id: item.imdbid,
         title: item.title,
         year: item.year,
-        posterUrl: item.poster,
-        filter: true
+        posterUrl: item.poster
       }));
     }
-
   } catch (e) {
     if (e.message && (e.message.includes('Movie not found') || e.message.includes('Incorrect IMDb ID'))) {
       // Don't log this 404 message

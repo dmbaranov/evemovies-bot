@@ -13,7 +13,7 @@ export interface ISearchResult {
   title: string;
   year: number;
   posterUrl: string;
-  filter: boolean;
+  skipFiltering?: boolean;
 }
 
 type Provider = (params: ISearchParameters) => Promise<ISearchResult[]>;
@@ -39,17 +39,13 @@ const movieSearchWrapper = (provider: Provider) => async (ctx: ContextMessageUpd
     language
   });
 
-  let filteredResult = rawResult.filter((v,i,a)=>a.findIndex(t=>(t.id === v.id))===i);
-  if (rawResult[0] && rawResult[0].filter == true) {
-    filteredResult = filteredResult.filter(movie => movie.year >= currentYear - MOVIE_TTL);
-  }
+  // Filter out outdated movies
+  let filteredResult = rawResult.filter((movie) => movie.skipFiltering || movie.year >= currentYear - MOVIE_TTL);
 
-  logger.debug(
-    ctx,
-    'Movie search: params %O, results length %d',
-    { title, year, language },
-    filteredResult.length
-  );
+  // Remove duplicates
+  filteredResult = [...new Map(filteredResult.map((movie) => [movie.id, movie])).values()];
+
+  logger.debug(ctx, 'Movie search: params %O, results length %d', { title, year, language }, filteredResult.length);
 
   return filteredResult;
 };
