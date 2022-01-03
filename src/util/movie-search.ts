@@ -13,6 +13,7 @@ export interface ISearchResult {
   title: string;
   year: number;
   posterUrl: string;
+  validMovie?: boolean; // only valid movies will be shown to the user
   skipFiltering?: boolean;
 }
 
@@ -39,15 +40,21 @@ const movieSearchWrapper = (provider: Provider) => async (ctx: ContextMessageUpd
     language
   });
 
-  // Filter out outdated movies
-  let filteredResult = rawResult.filter((movie) => movie.skipFiltering || movie.year >= currentYear - MOVIE_TTL);
+  const result = [
+    ...new Map(
+      rawResult.map((movie) => [
+        movie.id,
+        {
+          ...movie,
+          validMovie: movie.skipFiltering || movie.year >= currentYear - MOVIE_TTL
+        }
+      ])
+    ).values()
+  ];
 
-  // Remove duplicates
-  filteredResult = [...new Map(filteredResult.map((movie) => [movie.id, movie])).values()];
+  logger.debug(ctx, 'Movie search: params %O, results length %d', { title, year, language }, result.length);
 
-  logger.debug(ctx, 'Movie search: params %O, results length %d', { title, year, language }, filteredResult.length);
-
-  return filteredResult;
+  return result;
 };
 
 export const movieSearch = {

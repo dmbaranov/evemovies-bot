@@ -32,15 +32,11 @@ export async function getMovieList(ctx: ContextMessageUpdate): Promise<ISearchRe
  * @param movies - list of movies
  */
 export function getMoviesMenu(movies: ISearchResult[]) {
+  const filteredMovies = movies.filter((movie) => movie.validMovie);
+
   return Extra.HTML().markup((m: Markup) =>
     m.inlineKeyboard(
-      movies.map(item => [
-        m.callbackButton(
-          `(${item.year}) ${item.title}`,
-          JSON.stringify({ a: 'movie', p: item.id }),
-          false
-        )
-      ]),
+      filteredMovies.map((item) => [m.callbackButton(`(${item.year}) ${item.title}`, JSON.stringify({ a: 'movie', p: item.id }), false)]),
       {}
     )
   );
@@ -54,16 +50,8 @@ export function getMovieControlMenu(ctx: ContextMessageUpdate) {
   return Extra.HTML().markup((m: Markup) =>
     m.inlineKeyboard(
       [
-        m.callbackButton(
-          ctx.i18n.t('scenes.search.back_button'),
-          JSON.stringify({ a: 'back', p: undefined }),
-          false
-        ),
-        m.callbackButton(
-          ctx.i18n.t('scenes.search.add_button'),
-          JSON.stringify({ a: 'add', p: ctx.movie.id }),
-          false
-        )
+        m.callbackButton(ctx.i18n.t('scenes.search.back_button'), JSON.stringify({ a: 'back', p: undefined }), false),
+        m.callbackButton(ctx.i18n.t('scenes.search.add_button'), JSON.stringify({ a: 'add', p: ctx.movie.id }), false)
       ],
       {}
     )
@@ -125,7 +113,7 @@ export async function canAddMovie(ctx: ContextMessageUpdate) {
 
   if (movieRelease) {
     return ctx.i18n.t('scenes.search.reason_movie_released');
-  } else if (user.observableMovies.some(m => m._id === ctx.movie.id)) {
+  } else if (user.observableMovies.some((m) => m._id === ctx.movie.id)) {
     return ctx.i18n.t('scenes.search.reason_already_observing');
   }
 

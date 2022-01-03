@@ -21,6 +21,8 @@
       "chosen_movie": "You've chosen movie: ${title}",
       "added_movie_to_lib": "✅ I added ${title} to your collection and write you once it is released in a good quality! Continue search or get back",
       "list_of_found_movies": "🔎 Here's a list of movies that I found for you! Please, choose one or specify your request",
+      "list_of_found_movies_all_hidden": "🗑 All the movies were removed from the search result. \n\n Old movies are removed from the search result as they are already available on torrents",
+      "list_of_found_movies_with_hidden_movies": "🔎 Here's a list of movies that I found for you! Please, choose one or specify your request.\n\n${invalidMoviesNumber} movies were removed from search result.",
       "continue_search": "${canAddResult} Continue search or get back",
       "back_button": "◀️ Back",
       "add_button": "➕ Add",

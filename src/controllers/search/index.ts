@@ -30,14 +30,17 @@ searcher.hears(match('keyboards.back_keyboard.back'), leave());
 
 searcher.on('text', async (ctx: ContextMessageUpdate) => {
   deleteFromSession(ctx, 'movies');
+
   const movies = await getMovieList(ctx);
+  if (!movies || !movies.length) return ctx.reply(ctx.i18n.t('scenes.search.no_movies_found'));
 
-  if (!movies || !movies.length) {
-    await ctx.reply(ctx.i18n.t('scenes.search.no_movies_found'));
-    return;
-  }
+  const invalidMoviesNumber = movies.filter((movie) => !movie.validMovie).length;
+  if (invalidMoviesNumber === movies.length) return ctx.reply(ctx.i18n.t('scenes.search.list_of_found_movies_all_hidden'));
 
-  await ctx.reply(ctx.i18n.t('scenes.search.list_of_found_movies'), getMoviesMenu(movies));
+  let replyTemplate = 'scenes.search.list_of_found_movies';
+  if (invalidMoviesNumber > 0) replyTemplate += '_with_hidden_movies';
+
+  await ctx.reply(ctx.i18n.t(replyTemplate, { invalidMoviesNumber }), getMoviesMenu(movies));
 });
 
 searcher.action(/movie/, exposeMovie, movieAction);
