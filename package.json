@@ -21,7 +21,7 @@
     "cloudscraper": "^1.5.0",
     "dotenv": "^6.1.0",
     "imdb-api": "^4.0.2",
-    "lodash": "^4.17.11",
+    "lodash": "^4.17.21",
     "mongoose": "^5.7.5",
     "request": "^2.88.0",
     "request-promise": "^4.2.2",
