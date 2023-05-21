@@ -6,7 +6,7 @@ import { ISearchParameters, ISearchResult } from '../movie-search';
  * @param params - search parameters
  */
 export async function filmopotok(params: ISearchParameters): Promise<ISearchResult[]> {
-  const url = encodeURI(`http://filmpotok.ru/search/autocomplete/all/${params.title}`);
+  const url = encodeURI(`http://filmpotok.com/search/autocomplete/all/${params.title}`);
   let response;
 
   try {
