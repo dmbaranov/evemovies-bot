@@ -1,6 +1,7 @@
 # Evemovies bot
 
-### BETA version
+## Deprecation note
+This project is no longer maintained and may not function as originally intended. It remains available as a demonstration only.
 
 ## Introduction
 
